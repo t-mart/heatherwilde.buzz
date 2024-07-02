@@ -14,7 +14,7 @@
 /* Define default (light mode) colors */
 :root {
 	--background-color: #fafafa;
-	--text-color: #0a0a0a;
+	--text-color: #171717;
 	--up-color: #62c073;
 	--down-color: #ff6166;
 	--spotty-color: #f2a20d;
@@ -42,11 +42,17 @@ a {
 	text-decoration: underline;
 }
 
-
 a:visited {
 	color: var(--text-color);
 }
 
 a:hover {
 	color: var(--up-color);
+}
+
+a:focus {
+	/* color: var(--up-color); */
+	outline: 0.2em dashed var(--up-color);
+	outline-offset: 0.3em;
+	border-radius: 0.25em;
 }

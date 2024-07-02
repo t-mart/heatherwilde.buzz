@@ -7,9 +7,7 @@
 </svelte:head>
 
 <div class="howdy">
-	<h1>Howdy, neighbor!</h1>
-
-	<p>I live in Heatherwilde, and bet you do too.</p>
+	<h1>Howdy, Heatherwilde neighbor!</h1>
 
 	<p>Let's chat about the goings-on going on:</p>
 
@@ -35,9 +33,10 @@
 		font-weight: bold;
 		font-family: 'ATNameSansDisplayTrial-BlackItalic', sans-serif;
 		color: var(--cta-color);
+		margin-block-start: 1.5rem;
 	}
 
-    .howdy {
-        font-size: 2rem;
-    }
+	.howdy {
+		font-size: 2rem;
+	}
 </style>
