@@ -32,6 +32,7 @@
 		font-family: 'ATNameSansDisplayTrial-BlackItalic', sans-serif;
 		color: var(--cta-color);
 		margin-block-start: 1.5rem;
+        text-align: center;
 	}
 
 	.howdy {
