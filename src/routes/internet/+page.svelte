@@ -43,7 +43,7 @@
 			<LinePlot {probes} /><!-- TODO: Remove this development stuff -->
 			{#if process.env.NODE_ENV === 'development'}
 				{@const showProbesCount = 10}
-				<div style="font-family: sans-serif">
+				<div class="dev-panel">
 					<button
 						on:click={() =>
 							(probes = [
@@ -111,8 +111,16 @@ and want know if its just you or not.</p>
 	.internet {
 		display: flex;
 		flex-direction: column;
-		/* center all children */
 		align-items: center;
 		gap: 1rem;
+	}
+
+	.dev-panel button {
+		border: 2px solid var(--text-color);
+		border-radius: 0.5rem;;
+	}
+
+	.dev-panel button:hover {
+		color: var(--up-color)
 	}
 </style>

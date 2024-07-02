@@ -16,26 +16,26 @@
 		<li>Party or event coming up?</li>
 	</ul>
 
-	<p class="cta">Come on by the <a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a>!</p>
+	<p class="cta">Come on by the <a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a> and talk about it!</p>
 </div>
 
 <style>
 	h1 {
-		font-size: 2.5rem;
-		font-weight: bold;
-		font-family: 'ATNameSansDisplayTrial-BlackItalic', sans-serif;
+		font-family: var(--heading-font-family);
 	}
 
 	.cta {
 		font-size: 4rem;
-		font-weight: bold;
-		font-family: 'ATNameSansDisplayTrial-BlackItalic', sans-serif;
-		color: var(--cta-color);
+		font-family: var(--heading-font-family);
 		margin-block-start: 1.5rem;
-        text-align: center;
+		text-align: center;
 	}
 
-	.howdy {
-		font-size: 2rem;
-	}
+    .cta a {
+        color: var(--up-color);
+    }
+
+    .cta a:hover {
+        color: var(--text-color);
+    }
 </style>

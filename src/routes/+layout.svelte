@@ -22,7 +22,6 @@
 							/></svg
 						>
 					</button>
-					<!-- <a href="/" aria-label="Home"> -->
 					<svg
 						class="logo"
 						viewBox="-34.5 0 122 100"
@@ -36,12 +35,11 @@
 							transform="skewX(-15)"
 						/>
 					</svg>
-					<!-- </a> -->
 				</li>
 				<li><a href="/">Home</a></li>
 				<li><a href="https://discord.gg/fYS3BTXJdr">Discord</a></li>
-				<li><a href="/internet">My Optimum Internet</a></li>
-				<li><a href="https://trashthisweek.com/">Trash This Week</a></li>
+				<li><a href="/internet">Optimum</a></li>
+				<li><a href="/cool-local-stuff">Cool Local Stuff</a></li>
 			</ol>
 		</nav>
 	</header>
@@ -58,6 +56,18 @@
 		padding-left: 2rem;
 		padding-right: 2rem;
 		max-width: 800px;
+	}
+
+	nav a {
+		color: var(--text-color);
+	}
+
+	nav a:visited {
+		color: var(--text-color);
+	}
+
+	nav a:hover {
+		color: var(--up-color);
 	}
 
 	nav ol {
@@ -84,7 +94,7 @@
 	.nav-buttons {
 		display: flex;
 		align-items: center;
-        gap: 1rem;
+		gap: 1rem;
 	}
 
 	@media (min-width: 600px) {
@@ -94,7 +104,7 @@
 
 		nav ol.collapsed li:not(.nav-buttons) {
 			display: unset;
-            align-self: flex-end;
+			align-self: flex-end;
 		}
 
 		nav ol li .hamburger {
@@ -111,9 +121,9 @@
 		stroke: var(--up-color);
 	}
 
-    .hamburger {
-        padding: 0;
-    }
+	.hamburger {
+		padding: 0;
+	}
 
 	.hamburger svg {
 		stroke: var(--text-color);
