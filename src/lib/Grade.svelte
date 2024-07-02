@@ -65,8 +65,8 @@
 	}
 
 	.grade {
-		font-size: 2rem;
-		font-weight: bold;
-		font-family: 'ATNameSansDisplayTrial-Black', sans-serif;
+		font-size: 2.5rem;
+		font-family: 'ATNameSansDisplayTrial-BlackItalic', sans-serif;
+		text-align: center;
 	}
 </style>

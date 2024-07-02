@@ -3,6 +3,10 @@
 	src: url('/fonts/ATNameSansDisplayTrial-Black.otf') format('opentype');
 }
 @font-face {
+	font-family: 'ATNameSansDisplayTrial-BlackItalic';
+	src: url('/fonts/ATNameSansDisplayTrial-BlackItalic.otf') format('opentype');
+}
+@font-face {
 	font-family: 'ATNameSansDisplayTrial-Regular';
 	src: url('/fonts/ATNameSansDisplayTrial-Regular.otf') format('opentype');
 }
@@ -31,4 +35,17 @@ body {
 	background-color: var(--background-color);
 	color: var(--text-color);
 	font-family: 'ATNameSansDisplayTrial-Regular', sans-serif;
+}
+
+a {
+	text-decoration: underline;
+}
+
+
+a:visited {
+	color: inherit;
+}
+
+a:hover {
+	color: var(--up-color);
 }
