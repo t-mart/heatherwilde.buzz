@@ -51,8 +51,14 @@ a:hover {
 }
 
 a:focus {
-	/* color: var(--up-color); */
 	outline: 0.2em dashed var(--up-color);
 	outline-offset: 0.3em;
 	border-radius: 0.25em;
+}
+
+button {
+	color: var(--text-color);
+	background: none;
+	border: none;
+	cursor: pointer;
 }
