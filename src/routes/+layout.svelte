@@ -50,7 +50,7 @@
 		stroke: var(--up-color);
 	}
 
-	svg:hover {
+	a:hover svg {
 		stroke: var(--text-color);
 	}
 
