@@ -9,8 +9,6 @@
 <div class="howdy">
 	<h1>Howdy, Heatherwilde neighbor!</h1>
 
-	<p>Let's chat about the goings-on going on:</p>
-
 	<ul>
 		<li>Is the internet down?</li>
 		<li>Wanna game together?</li>
