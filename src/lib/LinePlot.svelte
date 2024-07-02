@@ -158,8 +158,6 @@
 
 <style>
 	svg {
-		padding-left: 1rem;
-		padding-right: 1rem;
 		width: 100%;
 		height: 100%;
 	}
