@@ -6,7 +6,7 @@
 	import { PUBLIC_DATA_URL } from '$env/static/public';
 	import { Duration, DateTime } from 'luxon';
 
-	let probes: Probe[] = [];
+	let probes: Probe[] | null = null;
 	let error: string | null = null;
 	const fetchIntervalDuration = Duration.fromObject({ minutes: 1 }); // 1 minutes
 
@@ -40,64 +40,72 @@
 	{:else if probes}
 		{#if probes.length > 0}
 			<Grade {probes} />
-			<LinePlot {probes} />
+			<LinePlot {probes} /><!-- TODO: Remove this development stuff -->
+			{#if process.env.NODE_ENV === 'development'}
+				{@const showProbesCount = 10}
+				<div style="font-family: sans-serif">
+					<button
+						on:click={() =>
+							(probes = [
+								...(probes ?? []),
+								{
+									datetime: DateTime.now(),
+									wasUp: Math.random() > 0.5
+								}
+							])}>Add random probe</button
+					>
+					<button
+						on:click={() =>
+							(probes = [
+								...(probes ?? []),
+								{
+									datetime: DateTime.now(),
+									wasUp: true
+								}
+							])}>Add up probe</button
+					>
+					<button
+						on:click={() =>
+							(probes = [
+								...(probes ?? []),
+								{
+									datetime: DateTime.now(),
+									wasUp: false
+								}
+							])}>Add down probe</button
+					>
+					<button
+						on:click={() => {
+							probes = [];
+						}}>Clear probes</button
+					>
+					<p>First {showProbesCount} of {probes.length} probes</p>
+					<ol reversed>
+						{#each probes
+							.sort((a, b) => a.datetime.toMillis() - b.datetime.toMillis())
+							.slice(-showProbesCount) as probe}
+							<li>{probe.datetime.toISO()} - {probe.wasUp ? 'Up' : 'Down'}</li>
+						{/each}
+					</ol>
+				</div>
+			{/if}
 		{:else}
-			<p>No probes in data</p>
+			<p>No data</p>
 		{/if}
 	{:else}
 		<p>Loading...</p>
 	{/if}
-
-	<!-- TODO: Remove this development stuff -->
-	{#if process.env.NODE_ENV === 'development'}
-		{@const showProbesCount = 10}
-		<div style="font-family: sans-serif">
-			<button
-				on:click={() =>
-					(probes = [
-						...probes,
-						{
-							datetime: DateTime.now(),
-							wasUp: Math.random() > 0.5
-						}
-					])}>Add random probe</button
-			>
-			<button
-				on:click={() =>
-					(probes = [
-						...probes,
-						{
-							datetime: DateTime.now(),
-							wasUp: true
-						}
-					])}>Add up probe</button
-			>
-			<button
-				on:click={() =>
-					(probes = [
-						...probes,
-						{
-							datetime: DateTime.now(),
-							wasUp: false
-						}
-					])}>Add down probe</button
-			>
-			<button
-				on:click={() => {
-					probes = [];
-				}}>Clear probes</button
-			>
-			<p>First {showProbesCount} of {probes.length} probes</p>
-			<ol reversed>
-				{#each probes
-					.sort((a, b) => a.datetime.toMillis() - b.datetime.toMillis())
-					.slice(-showProbesCount) as probe}
-					<li>{probe.datetime.toISO()} - {probe.wasUp ? 'Up' : 'Down'}</li>
-				{/each}
-			</ol>
-		</div>
-	{/if}
 </div>
+
+<p>I'm an Optimum internet customer. There's been a lot of downtime lately and
+I'm keeping logs.</p>
+
+<p>This graph shows an external host's ability to communicate with my home
+network over time. Each point shown is one of those attempts. Just the last few
+are shown here.</p>
+
+<p>You may find this useful if your Optimum internet doesn't seem to be working,
+and want know if its just you or not.</p>
 
 <style>
 	.internet {
