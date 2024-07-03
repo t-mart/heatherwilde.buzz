@@ -34,6 +34,8 @@
 	<title>My Optimum Internet - heatherwilde.buzz</title>
 </svelte:head>
 
+<h1>Heatherwilde Optimum Internet Monitor</h1>
+
 <div class="internet">
 	{#if error}
 		<p>Error: {error}</p>
@@ -108,7 +110,7 @@ are shown here.</p>
 and want know if its just you or not.</p>
 
 <style>
-	.internet {
+	.dev-panel {
 		display: flex;
 		flex-direction: column;
 		align-items: center;

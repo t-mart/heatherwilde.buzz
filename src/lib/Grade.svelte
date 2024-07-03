@@ -38,7 +38,7 @@
 	}
 </script>
 
-<h1 class="grade">
+<h2 class="grade">
 	My internet is
 	<span class={grade === Grade.Up ? 'up' : grade === Grade.Spotty ? 'spotty' : 'down'}>
 		{#if grade === Grade.Up}
@@ -49,7 +49,7 @@
 			Down 😱
 		{/if}
 	</span>
-</h1>
+</h2>
 
 <style>
 	.up {

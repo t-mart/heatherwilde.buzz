@@ -13,25 +13,25 @@ const formatMillisecond = d3.timeFormat('.%L'),
 	formatYear = d3.timeFormat('%Y');
 
 export function multiFormat(date: Date) {
-	if (d3.utcSecond(date) < date) {
+	if (d3.timeSecond(date) < date) {
 		return formatMillisecond(date);
 	}
-	if (d3.utcMinute(date) < date) {
+	if (d3.timeMinute(date) < date) {
 		return formatSecond(date);
 	}
-	if (d3.utcHour(date) < date) {
+	if (d3.timeHour(date) < date) {
 		return formatMinute(date);
 	}
-	if (d3.utcDay(date) < date) {
+	if (d3.timeDay(date) < date) {
 		return formatHour(date);
 	}
-	if (d3.utcMonth(date) < date) {
-		if (d3.utcWeek(date) < date) {
+	if (d3.timeMonth(date) < date) {
+		if (d3.timeWeek(date) < date) {
 			return formatDay(date);
 		}
 		return formatWeek(date);
 	}
-	if (d3.utcYear(date) < date) {
+	if (d3.timeYear(date) < date) {
 		return formatMonth(date);
 	}
 	return formatYear(date);
