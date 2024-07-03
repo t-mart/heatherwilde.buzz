@@ -112,6 +112,10 @@
 		}
 	}
 
+    nav {
+        margin-bottom: 2rem;
+    }
+
 	svg {
 		width: 3rem;
 		min-width: 3rem;
@@ -127,7 +131,7 @@
 
 	.hamburger svg {
 		stroke: var(--text-color);
-		border: 1px solid var(--text-color);
+		border: 3px solid var(--text-color);
 		border-radius: 0.5rem;
 	}
 
