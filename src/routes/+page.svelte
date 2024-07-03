@@ -10,10 +10,12 @@
 	<h1>Howdy, Heatherwilde neighbor!</h1>
 
 	<ul>
-		<li>You doin' good?</li>
-		<li>Is the internet down?</li>
-		<li>Wanna game together?</li>
+		<li>How ya doin'?</li>
 		<li>Party or event coming up?</li>
+		<li>Is the internet down?</li>
+        <li>Got stuff to sell or give away?</li>
+        <li>Lost or found a pet?</li>
+		<li>Wanna game together?</li>
 	</ul>
 
 	<p class="cta">Come on by the <a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a> and talk about it!</p>
