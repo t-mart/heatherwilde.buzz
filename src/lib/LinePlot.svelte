@@ -6,7 +6,6 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	export let probes: Probe[];
-	// export let reduceToCount = 10;
 	export let redrawIntervalDuation = Duration.fromObject({ seconds: 10 });
 	const width = 640;
 	const height = 300;
@@ -17,9 +16,12 @@
 	const yAxisPadding = 30;
 	const xAxisLeftPadding = 30;
 	let svgElement: SVGSVGElement;
-
 	let gx: SVGGElement;
 	let gy: SVGGElement;
+
+	function probeWasUpString(probe: Probe): 'Up' | 'Down' {
+		return probe.wasUp ? 'Up' : 'Down';
+	}
 
 	/**
 	 * Reduce the number of probes to a given count. Merging of probes is done by
@@ -74,7 +76,7 @@
 	type PlotData = {
 		buckets: Probe[];
 		x: d3.ScaleTime<number, number, never>;
-		y: d3.ScaleOrdinal<boolean, number, never>;
+		y: d3.ScaleOrdinal<string, number, never>;
 		line: d3.Line<Probe>;
 	};
 	let plotData: PlotData;
@@ -82,10 +84,9 @@
 	function draw(probes: Probe[]): PlotData {
 		let buckets = probes;
 
-		// Uncomment the following line to reduce the number of data points.
-		// Since writing this code, I've decided to keep all data points because
-		// I switched to publishing a manageable/readble number of probes.
-
+		/* Uncomment the following line to reduce the number of data points.
+		Since writing this code, I've decided to keep all data points because I
+		switched to publishing a manageable/readble number of probes. */
 		// buckets = reduce(probes, reduceToCount);
 
 		let x = d3.scaleTime(
@@ -93,33 +94,29 @@
 			[marginLeft + xAxisLeftPadding, width - marginRight]
 		);
 		let y = d3.scaleOrdinal(
-			[false, true],
+			['Down', 'Up'],
 			[height - marginBottom - yAxisPadding, marginTop + yAxisPadding]
 		);
 		let line = d3.line<Probe>(
 			(d) => x(d.datetime.toJSDate()),
-			(d) => y(d.wasUp)
+			(d) => y(probeWasUpString(d))
 		);
-		d3.select(gy)
-			// might be able to avoid this gnarly cast?
-			.call(
-				d3
-					.axisLeft(y as unknown as d3.AxisScale<d3.AxisDomain>)
-					.tickFormat((d) => (d ? 'Up' : 'Down'))
-					.tickPadding(5)
-					.tickSize(10)
-			);
-		d3.select(gy).selectAll('line').attr('stroke-width', '0.2rem');
-		d3.select(gy).selectAll('path').attr('stroke-width', '0.2rem');
-		d3.select(gx)
+
+		let gySelection = d3.select(gy);
+		gySelection.call(d3.axisLeft<string>(y).tickPadding(5).tickSize(10));
+		gySelection.selectAll('line').attr('stroke-width', '0.2rem');
+		gySelection.selectAll('path').attr('stroke-width', '0.2rem');
+
+		let gxSelection = d3.select(gx);
+		gxSelection
 			.call(d3.axisBottom<Date>(x).tickFormat(multiFormat).tickSize(10))
 			.selectAll('text')
 			.style('text-anchor', 'end')
 			.attr('dx', '-1rem')
 			.attr('dy', '.3rem')
 			.attr('transform', 'rotate(-65)');
-		d3.select(gx).selectAll('line').attr('stroke-width', '0.2rem');
-		d3.select(gx).selectAll('path').attr('stroke-width', '0.2rem');
+		gxSelection.selectAll('line').attr('stroke-width', '0.2rem');
+		gxSelection.selectAll('path').attr('stroke-width', '0.2rem');
 		return { buckets, x, y, line };
 	}
 
@@ -140,19 +137,6 @@
 </script>
 
 <svg bind:this={svgElement} viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMinYMin meet">
-	<!-- gotta restate for SVG, i think -->
-	<defs>
-		<style type="text/css">
-			@font-face {
-				font-family: 'ATNameSansDisplayTrial-Regular';
-				src: url('/fonts/ATNameSansDisplayTrial-Regular.otf') format('opentype');
-			}
-			text {
-				font-family: 'ATNameSansDisplayTrial-Regular';
-				font-size: var(--text-font-size);
-			}
-		</style>
-	</defs>
 	<g class="axis x-axis" bind:this={gx} transform="translate(0,{height - marginBottom})" />
 	<g class="axis y-axis" bind:this={gy} transform="translate({marginLeft},0)" />
 	<path class="line" d={plotData.line(plotData.buckets)} />
@@ -160,7 +144,7 @@
 		{#each plotData.buckets as probe (probe.datetime)}
 			<circle
 				cx={plotData.x(probe.datetime.toJSDate())}
-				cy={plotData.y(probe.wasUp)}
+				cy={plotData.y(probeWasUpString(probe))}
 				r="0.5rem"
 				class:point={true}
 				class:wasUp={probe.wasUp}
@@ -177,6 +161,12 @@
 
 	.axis {
 		font-size: 0.75rem;
+		color: var(--non-data-color);
+	}
+
+	/* global needed because text elements are added dynamically by d3, and
+	svelte would otherwise cull from output */
+	:global(.axis text) {
 		color: var(--non-data-color);
 	}
 
