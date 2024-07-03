@@ -9,13 +9,13 @@
 	// export let reduceToCount = 10;
 	export let redrawIntervalDuation = Duration.fromObject({ seconds: 10 });
 	const width = 640;
-	const height = 200;
+	const height = 300;
 	const marginTop = 20;
 	const marginRight = 20;
-	const marginBottom = 30;
-	const marginLeft = 50;
-	const yAxisPadding = 10;
-	const xAxisLeftPadding = 10;
+	const marginBottom = 90;
+	const marginLeft = 80;
+	const yAxisPadding = 30;
+	const xAxisLeftPadding = 30;
 	let svgElement: SVGSVGElement;
 
 	let gx: SVGGElement;
@@ -106,8 +106,20 @@
 				d3
 					.axisLeft(y as unknown as d3.AxisScale<d3.AxisDomain>)
 					.tickFormat((d) => (d ? 'Up' : 'Down'))
+					.tickPadding(5)
+					.tickSize(10)
 			);
-		d3.select(gx).call(d3.axisBottom<Date>(x).tickFormat(multiFormat));
+		d3.select(gy).selectAll('line').attr('stroke-width', '0.2rem');
+		d3.select(gy).selectAll('path').attr('stroke-width', '0.2rem');
+		d3.select(gx)
+			.call(d3.axisBottom<Date>(x).tickFormat(multiFormat).tickSize(10))
+			.selectAll('text')
+			.style('text-anchor', 'end')
+			.attr('dx', '-1rem')
+			.attr('dy', '.3rem')
+			.attr('transform', 'rotate(-65)');
+		d3.select(gx).selectAll('line').attr('stroke-width', '0.2rem');
+		d3.select(gx).selectAll('path').attr('stroke-width', '0.2rem');
 		return { buckets, x, y, line };
 	}
 
@@ -131,24 +143,25 @@
 	<!-- gotta restate for SVG, i think -->
 	<defs>
 		<style type="text/css">
-		  @font-face {
-			font-family: 'ATNameSansDisplayTrial-Regular';
-			src: url('/fonts/ATNameSansDisplayTrial-Regular.otf') format('opentype');
-		  }
-		  text {
-			font-family: 'ATNameSansDisplayTrial-Regular';
-		  }
+			@font-face {
+				font-family: 'ATNameSansDisplayTrial-Regular';
+				src: url('/fonts/ATNameSansDisplayTrial-Regular.otf') format('opentype');
+			}
+			text {
+				font-family: 'ATNameSansDisplayTrial-Regular';
+				font-size: var(--text-font-size);
+			}
 		</style>
-	  </defs>
-	<g class="axis" bind:this={gx} transform="translate(0,{height - marginBottom})" />
-	<g class="axis" bind:this={gy} transform="translate({marginLeft},0)" />
+	</defs>
+	<g class="axis x-axis" bind:this={gx} transform="translate(0,{height - marginBottom})" />
+	<g class="axis y-axis" bind:this={gy} transform="translate({marginLeft},0)" />
 	<path class="line" d={plotData.line(plotData.buckets)} />
 	<g>
 		{#each plotData.buckets as probe (probe.datetime)}
 			<circle
 				cx={plotData.x(probe.datetime.toJSDate())}
 				cy={plotData.y(probe.wasUp)}
-				r="4"
+				r="0.5rem"
 				class:point={true}
 				class:wasUp={probe.wasUp}
 			/>
@@ -170,8 +183,8 @@
 	.line {
 		stroke: var(--non-data-color);
 		fill: none;
-		stroke-width: 1;
-		stroke-dasharray: 2, 2;
+		stroke-width: 0.2rem;
+		stroke-dasharray: 6, 2;
 	}
 
 	.point {
