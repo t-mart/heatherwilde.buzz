@@ -12,15 +12,21 @@
 	<ul>
 		<li>Party or event coming up?</li>
 		<li>Is the internet down?</li>
-        <li>Got stuff to sell or give away?</li>
-        <li>Lost or found a pet?</li>
+		<li>Got stuff to sell or give away?</li>
+		<li>Lost or found a pet?</li>
 		<li>Wanna game together?</li>
-        <li>Tired of Nextdoor spam?</li>
+		<li>Tired of Nextdoor spam?</li>
 	</ul>
 
-	<p class="cta">Come on by the <a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a> and talk about it!</p>
+	<p class="cta">
+		Come on by the <a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a> and talk about it!
+	</p>
 
-    <p>Hi! I'm Tim and I live in <a href="https://maps.app.goo.gl/AzALBEXKtV4w57Tm9">Heatherwilde</a> of Pflugerville, Texas. I made this website to connect with my neighbors more easily. I ain't selling you nothing — this is just for fun.</p>
+	<p>
+		Hi! I'm Tim and I live in <a href="https://maps.app.goo.gl/AzALBEXKtV4w57Tm9">Heatherwilde</a> of
+		Pflugerville, Texas. I made this website to connect with my neighbors more easily. I ain't selling
+		you nothing — this is just for fun.
+	</p>
 </div>
 
 <style>
@@ -35,11 +41,11 @@
 		text-align: center;
 	}
 
-    .cta a {
-        color: var(--up-color);
-    }
+	.cta a {
+		color: var(--up-color);
+	}
 
-    .cta a:hover {
-        color: var(--text-color);
-    }
+	.cta a:hover {
+		color: var(--text-color);
+	}
 </style>
