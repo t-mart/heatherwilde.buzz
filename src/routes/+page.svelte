@@ -10,7 +10,6 @@
 	<h1>Howdy, Heatherwilde neighbor!</h1>
 
 	<ul>
-		<li>How ya doin'?</li>
 		<li>Party or event coming up?</li>
 		<li>Is the internet down?</li>
         <li>Got stuff to sell or give away?</li>
