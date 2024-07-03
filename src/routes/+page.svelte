@@ -23,8 +23,10 @@
 	</p>
 
 	<p>
-		Hi! I'm Tim and I live in <a href="https://maps.app.goo.gl/AzALBEXKtV4w57Tm9">Heatherwilde</a> of
-		Pflugerville, Texas. I made this website to connect with my neighbors more easily. I ain't selling
+		Hi! I'm Tim and I live in <a
+			href="https://www.google.com/maps/place/Heatherwilde,+Pflugerville,+TX+78660/@30.457596,-97.6332716,15z/"
+			>Heatherwilde</a
+		> of Pflugerville, Texas. I made this website to connect with my neighbors more easily. I ain't selling
 		you nothing — this is just for fun.
 	</p>
 </div>
