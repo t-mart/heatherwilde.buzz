@@ -38,7 +38,7 @@
 				</li>
 				<li><a href="/">Home</a></li>
 				<li><a href="https://discord.gg/fYS3BTXJdr">Discord</a></li>
-				<li><a href="/internet">Optimum</a></li>
+				<li><a href="/optimum">Optimum</a></li>
 				<li><a href="/cool-local-stuff">Cool Local Stuff</a></li>
 			</ol>
 		</nav>

@@ -11,7 +11,7 @@
 		{
 			title: 'Heatherwilde Optimum Internet Monitor',
 			desc: 'Shows the current status of my Optimum internet connection.',
-			url: '/internet'
+			url: '/optimum'
 		},
 		{
 			title: 'Trash This Week',
