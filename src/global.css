@@ -31,7 +31,7 @@
 :root {
 	--background-color: #fafafa;
 	--text-color: #171717;
-	--up-color: #62c073;
+	--up-color: rgb(8, 163, 86);
 	--down-color: #ff6166;
 	--spotty-color: #f2a20d;
 	--non-data-color: #666666;
@@ -43,6 +43,7 @@
 /* Define dark mode colors */
 @media (prefers-color-scheme: dark) {
 	:root {
+		--up-color: #62c073;
 		--background-color: #0a0a0a;
 		--text-color: #ededed;
 		--non-data-color: #a1a1a1;
