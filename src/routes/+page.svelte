@@ -32,7 +32,7 @@
 	.cta {
 		font-size: 4rem;
 		font-family: var(--heading-font-family);
-		margin-block-start: 1.5rem;
+		margin-block-start: 1em;
 		text-align: center;
 	}
 
