@@ -42,11 +42,11 @@
 	My internet is
 	<span class={grade === Grade.Up ? 'up' : grade === Grade.Spotty ? 'spotty' : 'down'}>
 		{#if grade === Grade.Up}
-			Up <span class="emoji">😎</span>
+			Up 😎
 		{:else if grade === Grade.Spotty}
-			Spotty <span class="emoji">😟</span>
+			Spotty 😟
 		{:else}
-			Down <span class="emoji">😟</span>
+			Down 😟
 		{/if}
 	</span>
 </h2>
@@ -66,9 +66,5 @@
 
 	.grade {
 		text-align: center;
-	}
-
-	.emoji {
-		font-style: normal;
 	}
 </style>

@@ -1,121 +1,120 @@
-@font-face {
-	font-family: 'ATNameSansDisplayTrial-Black';
-	src:
-		url('/fonts/at-name-sans-display-trial-black-webfont.woff2') format('woff2'),
-		url('/fonts/at-name-sans-display-trial-black-webfont.woff') format('woff');
-	font-style: normal;
-	font-weight: 900;
-}
-@font-face {
-	font-family: 'ATNameSansDisplayTrial-BlackItalic';
-	src:
-		url('/fonts/at-name-sans-display-trial-blackitalic-webfont.woff2') format('woff2'),
-		url('/fonts/at-name-sans-display-trial-blackitalic-webfont.woff') format('woff');
-	font-style: italic;
-	font-weight: 900;
-}
-@font-face {
-	font-family: 'ATNameSansDisplayTrial-Italic';
-	src:
-		url('/fonts/at-name-sans-display-trial-italic-webfont.woff2') format('woff2'),
-		url('/fonts/at-name-sans-display-trial-italic-webfont.woff') format('woff');
-	font-style: italic;
-	font-weight: 400;
-}
-@font-face {
-	font-family: 'ATNameSansDisplayTrial-Regular';
-	src:
-		url('/fonts/at-name-sans-display-trial-regular-webfont.woff2') format('woff2'),
-		url('/fonts/at-name-sans-display-trial-regular-webfont.woff') format('woff');
-	font-style: normal;
-	font-weight: 400;
-}
-
-/* Define default (light mode) colors */
-:root {
-	--background-color: #fafafa;
-	--text-color: #171717;
-	--up-color: #3ecf8e;
-	--down-color: #ff6166;
-	--spotty-color: #f2a20d;
-	--non-data-color: #666666;
-	--heading-font-family: 'ATNameSansDisplayTrial-Black', sans-serif;
-	--text-font-family: 'ATNameSansDisplayTrial-Regular', sans-serif;
-	--text-font-size: 1.5rem;
-}
-
-/* Define dark mode colors */
-@media (prefers-color-scheme: dark) {
-	:root {
-		--up-color: #62c073;
-		--background-color: #0a0a0a;
-		--text-color: #ededed;
-		--non-data-color: #a1a1a1;
+@layer global {
+	@font-face {
+		font-family: 'ATNameSansDisplayTrial-Black';
+		src:
+			url('/fonts/at-name-sans-display-trial-black-webfont.woff2') format('woff2'),
+			url('/fonts/at-name-sans-display-trial-black-webfont.woff') format('woff');
+		font-style: normal;
+		font-weight: 900;
 	}
-}
+	@font-face {
+		font-family: 'ATNameSansDisplayTrial-BlackItalic';
+		src:
+			url('/fonts/at-name-sans-display-trial-blackitalic-webfont.woff2') format('woff2'),
+			url('/fonts/at-name-sans-display-trial-blackitalic-webfont.woff') format('woff');
+		font-style: italic;
+		font-weight: 900;
+	}
+	@font-face {
+		font-family: 'ATNameSansDisplayTrial-Italic';
+		src:
+			url('/fonts/at-name-sans-display-trial-italic-webfont.woff2') format('woff2'),
+			url('/fonts/at-name-sans-display-trial-italic-webfont.woff') format('woff');
+		font-style: italic;
+		font-weight: 400;
+	}
+	@font-face {
+		font-family: 'ATNameSansDisplayTrial-Regular';
+		src:
+			url('/fonts/at-name-sans-display-trial-regular-webfont.woff2') format('woff2'),
+			url('/fonts/at-name-sans-display-trial-regular-webfont.woff') format('woff');
+		font-style: normal;
+		font-weight: 400;
+	}
 
-/* Apply the colors to the body and other elements */
-body {
-	background-color: var(--background-color);
-	color: var(--text-color);
-	font-family: var(--text-font-family);
-	font-size: var(--text-font-size);
-	font-weight: 400;
-	font-style: normal;
-}
+	:root {
+		--background-color: #fafafa;
+		--text-color: #171717;
+		--up-color: #62c073;
+		--down-color: #ff6166;
+		--spotty-color: #f2a20d;
+		--non-data-color: #666666;
+		--heading-font-family: 'ATNameSansDisplayTrial-Black', sans-serif;
+		--text-font-family: 'ATNameSansDisplayTrial-Regular', sans-serif;
+		--text-font-size: 1.5rem;
+	}
 
-svg text {
-	color: var(--text-color);
-	font-family: var(--text-font-family);
-	font-size: var(--text-font-size);
-	font-weight: 400;
-	font-style: normal;
-}
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--up-color: #62c073;
+			--background-color: #0a0a0a;
+			--text-color: #ededed;
+			--non-data-color: #a1a1a1;
+		}
+	}
 
-.heading {
-	font-family: var(--heading-font-family);
-	font-weight: 900;
-	font-style: normal;
-}
+	body {
+		background-color: var(--background-color);
+		color: var(--text-color);
+		font-family: var(--text-font-family);
+		font-size: var(--text-font-size);
+		font-weight: 400;
+		font-style: normal;
+	}
 
-h1 {
-	font-size: 2.5rem;
-}
+	svg text {
+		color: var(--text-color);
+		font-family: var(--text-font-family);
+		font-size: var(--text-font-size);
+		font-weight: 400;
+		font-style: normal;
+	}
 
-h2 {
-	font-size: 2rem;
-}
+	.heading {
+		font-family: var(--heading-font-family);
+		font-weight: 900;
+		font-style: normal;
+	}
 
-h3 {
-	font-size: 1.5rem;
-}
+	h1 {
+		font-size: 2.5rem;
+	}
 
-h4 {
-	font-size: 1.25rem;
-}
+	h2 {
+		font-size: 2rem;
+	}
 
-a {
-	color: var(--up-color);
-	text-decoration: underline;
-}
+	h3 {
+		font-size: 1.5rem;
+	}
 
-a:visited {
-	color: var(--up-color);
-}
+	h4 {
+		font-size: 1.25rem;
+	}
 
-a:hover {
-	color: var(--text-color);
-}
+	a {
+		color: var(--up-color);
+		text-decoration: underline;
+	}
 
-a:focus {
-	outline: 0.15em dashed var(--up-color);
-	outline-offset: 0.1em;
-	border-radius: 0.25em;
-}
+	a:visited {
+		color: var(--up-color);
+	}
 
-button {
-	color: var(--text-color);
-	background: none;
-	border: none;
-	cursor: pointer;
+	a:hover {
+		color: var(--text-color);
+	}
+
+	a:focus {
+		outline: 0.15em dashed var(--up-color);
+		outline-offset: 0.1em;
+		border-radius: 0.25em;
+	}
+
+	button {
+		color: var(--text-color);
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
 }
