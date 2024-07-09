@@ -19,7 +19,7 @@
 	</ul>
 
 	<p class="cta heading">
-		Come on by the <a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a> and talk about it!
+		Come on by <br/><a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a><br/> and talk about it!
 	</p>
 
 	<p>
