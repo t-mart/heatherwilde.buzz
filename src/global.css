@@ -5,7 +5,6 @@
 		url('/fonts/at-name-sans-display-trial-black-webfont.woff') format('woff');
 	font-style: normal;
 	font-weight: 900;
-	font-display: swap;
 }
 @font-face {
 	font-family: 'ATNameSansDisplayTrial-BlackItalic';
@@ -14,7 +13,6 @@
 		url('/fonts/at-name-sans-display-trial-blackitalic-webfont.woff') format('woff');
 	font-style: italic;
 	font-weight: 900;
-	font-display: swap;
 }
 @font-face {
 	font-family: 'ATNameSansDisplayTrial-Italic';
@@ -23,7 +21,6 @@
 		url('/fonts/at-name-sans-display-trial-italic-webfont.woff') format('woff');
 	font-style: italic;
 	font-weight: 400;
-	font-display: swap;
 }
 @font-face {
 	font-family: 'ATNameSansDisplayTrial-Regular';
@@ -32,7 +29,6 @@
 		url('/fonts/at-name-sans-display-trial-regular-webfont.woff') format('woff');
 	font-style: normal;
 	font-weight: 400;
-	font-display: swap;
 }
 
 /* Define default (light mode) colors */
