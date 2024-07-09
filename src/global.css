@@ -1,27 +1,35 @@
 @font-face {
-	font-family: 'ATNameSansDisplayTrial-BlackItalic';
-	src: url('/fonts/ATNameSansDisplayTrial-BlackItalic.otf') format('opentype');
-	font-style: italic;
-	font-weight: 900;
-	font-display: swap;
-}
-@font-face {
 	font-family: 'ATNameSansDisplayTrial-Black';
-	src: url('/fonts/ATNameSansDisplayTrial-Black.otf') format('opentype');
+	src:
+		url('/fonts/at-name-sans-display-trial-black-webfont.woff2') format('woff2'),
+		url('/fonts/at-name-sans-display-trial-black-webfont.woff') format('woff');
 	font-style: normal;
 	font-weight: 900;
 	font-display: swap;
 }
 @font-face {
+	font-family: 'ATNameSansDisplayTrial-BlackItalic';
+	src:
+		url('/fonts/at-name-sans-display-trial-blackitalic-webfont.woff2') format('woff2'),
+		url('/fonts/at-name-sans-display-trial-blackitalic-webfont.woff') format('woff');
+	font-style: italic;
+	font-weight: 900;
+	font-display: swap;
+}
+@font-face {
 	font-family: 'ATNameSansDisplayTrial-Italic';
-	src: url('/fonts/ATNameSansDisplayTrial-Italic.otf') format('opentype');
+	src:
+		url('/fonts/at-name-sans-display-trial-italic-webfont.woff2') format('woff2'),
+		url('/fonts/at-name-sans-display-trial-italic-webfont.woff') format('woff');
 	font-style: italic;
 	font-weight: 400;
 	font-display: swap;
 }
 @font-face {
 	font-family: 'ATNameSansDisplayTrial-Regular';
-	src: url('/fonts/ATNameSansDisplayTrial-Regular.otf') format('opentype');
+	src:
+		url('/fonts/at-name-sans-display-trial-regular-webfont.woff2') format('woff2'),
+		url('/fonts/at-name-sans-display-trial-regular-webfont.woff') format('woff');
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
@@ -31,7 +39,7 @@
 :root {
 	--background-color: #fafafa;
 	--text-color: #171717;
-	--up-color: rgb(8, 163, 86);
+	--up-color: #3ecf8e;
 	--down-color: #ff6166;
 	--spotty-color: #f2a20d;
 	--non-data-color: #666666;
@@ -64,7 +72,12 @@ svg text {
 	font-size: var(--text-font-size);
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	font-family: var(--heading-font-family);
 }
 
