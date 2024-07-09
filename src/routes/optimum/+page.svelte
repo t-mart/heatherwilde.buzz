@@ -34,7 +34,7 @@
 	<title>My Optimum Internet - heatherwilde.buzz</title>
 </svelte:head>
 
-<h1>Heatherwilde Optimum Internet Monitor</h1>
+<h1 class="heading">Heatherwilde Optimum Internet Monitor</h1>
 
 <div class="internet">
 	{#if error}

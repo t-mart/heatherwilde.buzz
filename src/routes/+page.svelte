@@ -3,11 +3,11 @@
 </script>
 
 <svelte:head>
-	<title>Howdy! - heatherwilde.buzz</title>
+	<title>A friendly neighborhood site for Heatherwilde in Pflugerville, Texas - heatherwilde.buzz</title>
 </svelte:head>
 
 <div class="howdy">
-	<h1>Howdy, Heatherwilde neighbor!</h1>
+	<h1 class="heading">Howdy, Heatherwilde neighbor!</h1>
 
 	<ul>
 		<li>Party or event coming up?</li>
@@ -18,7 +18,7 @@
 		<li>Tired of Nextdoor spam?</li>
 	</ul>
 
-	<p class="cta">
+	<p class="cta heading">
 		Come on by the <a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a> and talk about it!
 	</p>
 
@@ -32,13 +32,8 @@
 </div>
 
 <style>
-	h1 {
-		font-family: var(--heading-font-family);
-	}
-
 	.cta {
 		font-size: 4rem;
-		font-family: var(--heading-font-family);
 		margin-block-start: 1em;
 		text-align: center;
 	}

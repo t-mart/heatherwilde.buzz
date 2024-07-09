@@ -39,7 +39,7 @@
 	--down-color: #ff6166;
 	--spotty-color: #f2a20d;
 	--non-data-color: #666666;
-	--heading-font-family: 'ATNameSansDisplayTrial-BlackItalic', sans-serif;
+	--heading-font-family: 'ATNameSansDisplayTrial-Black', sans-serif;
 	--text-font-family: 'ATNameSansDisplayTrial-Regular', sans-serif;
 	--text-font-size: 1.5rem;
 }
@@ -72,15 +72,10 @@ svg text {
 	font-style: normal;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.heading {
 	font-family: var(--heading-font-family);
 	font-weight: 900;
-	font-style: italic;
+	font-style: normal;
 }
 
 h1 {
@@ -113,8 +108,8 @@ a:hover {
 }
 
 a:focus {
-	outline: 0.2em dashed var(--up-color);
-	outline-offset: 0.3em;
+	outline: 0.15em dashed var(--up-color);
+	outline-offset: 0.1em;
 	border-radius: 0.25em;
 }
 

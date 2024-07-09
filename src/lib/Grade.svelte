@@ -38,15 +38,15 @@
 	}
 </script>
 
-<h2 class="grade">
+<h2 class="grade heading">
 	My internet is
 	<span class={grade === Grade.Up ? 'up' : grade === Grade.Spotty ? 'spotty' : 'down'}>
 		{#if grade === Grade.Up}
-			Up 😎
+			Up <span class="emoji">😎</span>
 		{:else if grade === Grade.Spotty}
-			Spotty 😟
+			Spotty <span class="emoji">😟</span>
 		{:else}
-			Down 😱
+			Down <span class="emoji">😟</span>
 		{/if}
 	</span>
 </h2>
@@ -66,5 +66,9 @@
 
 	.grade {
 		text-align: center;
+	}
+
+	.emoji {
+		font-style: normal;
 	}
 </style>

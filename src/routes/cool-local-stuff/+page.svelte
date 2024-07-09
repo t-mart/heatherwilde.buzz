@@ -26,12 +26,12 @@
 </svelte:head>
 
 <div class="cool-local-stuff">
-    <h1>Cool Local Stuff</h1>
+    <h1 class="heading">Cool Local Stuff</h1>
 
     <ul>
         {#each coolThings as coolThing}
             <li>
-                <h2><a href={coolThing.url}>{coolThing.title}</a></h2>
+                <h2 class="heading"><a href={coolThing.url}>{coolThing.title}</a></h2>
                 <p class="desc">{coolThing.desc}</p>
             </li>
         {/each}
