@@ -59,7 +59,10 @@
 
 <h3 class="heading">What is this?</h3>
 
-<p>I'm an Optimum internet customer. There's been a lot of downtime lately and I'm keeping logs.</p>
+<p>
+	I'm an Optimum internet customer. There's been a lot of downtime lately and,
+	as any concerned customer should, I'm keeping track.
+</p>
 
 <p>
 	These visualizations measure an external host's ability to communicate with my home network over
