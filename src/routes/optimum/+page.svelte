@@ -60,22 +60,24 @@
 <h3 class="heading">What is this?</h3>
 
 <p>
-	Optimum provides my home Internet service. There's been a lot of downtime lately and,
-	as any concerned customer should, I'm keeping track.
+	Optimum provides my home Internet service. There's been a lot of downtime
+	lately and, as any concerned customer should, I'm keeping track.
 </p>
 
 <p>
-	These visualizations measure an external host's ability to communicate with my home network over
-	time.
+	These visualizations measure an external host's ability to communicate with
+	my home network over time.
 </p>
 
 <p>
-	You may find this useful if your Optimum internet doesn't seem to be working, and want know if its
-	just you or not.
+	You may find this useful if your Optimum internet doesn't seem to be
+	working, and want know if its just you or not. Better yet, you can call to
+	complain with this data to back you up!
 </p>
 
 <p>
-	Note!: This data may not be accurate. Any network, especially at home, is subject to things like
-	power outages, equipment failures, and other issues that can cause downtime. I will occasionally
-	curate this data to remove any false positives.
+	But note: This data may not be accurate. Any computer network, especially at
+	home, is subject to things like power outages, equipment failures, bugs, and
+	other issues that can cause downtime. I will occasionally curate this data
+	to remove any false positives.
 </p>
