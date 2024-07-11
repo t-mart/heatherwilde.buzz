@@ -118,7 +118,7 @@
 {/if}
 
 <div class="uptime">
-	<h3 class="heading">Outage Incidents</h3>
+	<h3 class="heading">Outages</h3>
 
 	<svg
 		preserveAspectRatio="none"
