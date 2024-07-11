@@ -113,10 +113,6 @@
 	}
 </script>
 
-{#if selectedDay}
-	<p>{selectedDay.toString()}</p>
-{/if}
-
 <div class="uptime">
 	<h3 class="heading">Outages</h3>
 
