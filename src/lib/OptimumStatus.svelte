@@ -19,9 +19,9 @@
 	}
 </script>
 
-<h2 class="heading status" class:down={status == Status.Down}>
-	My internet is
-	<span>
+<h2 class="line">
+	<span>My internet is</span>
+	<span class="status" class:down={status == Status.Down}>
 		{#if status === Status.Up}
 			Up 😎
 		{:else}
@@ -31,14 +31,23 @@
 </h2>
 
 <style>
+	.line {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: baseline;;
+		margin-bottom: 3rem;
+		margin-top: 3rem;
+		column-gap: 1rem;
+		row-gap: 0.5rem;
+	}
+
 	.status {
 		background-color: var(--up-color);
 		color: var(--text-with-background-color);
 		padding: 0.5rem 0.75rem;
 		border-radius: 0.25rem;
 		text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
-		margin-bottom: 3rem;
-		margin-top: 3rem;
 		text-align: center;
 	}
 

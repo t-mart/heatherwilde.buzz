@@ -116,11 +116,7 @@
 <div class="uptime">
 	<h3 class="heading">Outages</h3>
 
-	<svg
-		preserveAspectRatio="none"
-		height="3rem"
-		viewBox={`0 0 ${days.length * 5 - 2} 34`}
-	>
+	<svg preserveAspectRatio="none" height="3rem" viewBox={`0 0 ${days.length * 5 - 2} 34`}>
 		{#each days as day, index}
 			<rect
 				class={day.in_service
@@ -145,30 +141,27 @@
 	</div>
 </div>
 
-<h3 class="heading">Outage History</h3>
+<div class="outage-history-heading">
+	<h3>Outage History</h3>
+	<a href="/api/optimum-incidents">Download JSON</a>
+</div>
 
 <ol class="descriptions">
 	{#each incidentDescriptions as incident}
 		<li>
-			<h4>
-				{#if incident.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
-				{incident.startTime} - {incident.duration}
-			</h4>
+			{#if incident.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
+			{incident.startTime} - {incident.duration}
 		</li>
 	{/each}
 </ol>
 
 <style>
-	:root {
-		--lightness-hover: 60%;
-	}
-
 	.hasIncident {
 		fill: var(--down-color);
 	}
 
 	.hasIncident:hover {
-		fill: hsl(from var(--down-color) h s l / var(--lightness-hover));
+		fill: var(--down-hover-color);
 	}
 
 	.noIncident {
@@ -176,7 +169,7 @@
 	}
 
 	.noIncident:hover {
-		fill: hsl(from var(--up-color) h s l / var(--lightness-hover));
+		fill: var(--up-hover-color);
 	}
 
 	.outOfService {
@@ -184,7 +177,7 @@
 	}
 
 	.outOfService:hover {
-		fill: hsl(from var(--non-data-color) h s l / var(--lightness-hover));
+		fill: var(--non-data-hover-color);
 	}
 
 	svg {
@@ -223,5 +216,11 @@
 
 	.ongoing {
 		color: var(--down-color);
+	}
+
+	.outage-history-heading {
+		display: flex;
+		gap: 1rem;
+		align-items: baseline;
 	}
 </style>

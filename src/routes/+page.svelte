@@ -18,7 +18,7 @@
 		<li>Tired of Nextdoor spam?</li>
 	</ul>
 
-	<p class="cta heading">
+	<p class="cta display-black">
 		Come on by <br/><a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a><br/> and talk about it!
 	</p>
 
@@ -39,11 +39,21 @@
 		text-align: center;
 	}
 
-	.cta a {
-		color: var(--up-color);
+
+	.howdy {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		font-size: 1.5rem;
 	}
 
-	.cta a:hover {
-		color: var(--text-color);
+	ul {
+		list-style: none;
+		padding: 0;
+	}
+
+	li {
+		margin-top: 0.25rem;
 	}
 </style>

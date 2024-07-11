@@ -4,7 +4,7 @@
 
 <div class="container">
 	<header>
-		<nav>
+		<nav class="standard-black">
 			<ol class:collapsed={navCollapsed}>
 				<li class="nav-buttons">
 					<button
@@ -55,10 +55,12 @@
 	.container {
 		margin-left: auto;
 		margin-right: auto;
-		max-width: 70ch;
-		padding-left: 2rem;
-		padding-right: 2rem;
-		margin-top: 2rem;
+		max-width: 80ch;
+		padding: 2rem;
+	}
+
+	nav {
+		font-size: 1.5rem;
 	}
 
 	nav a {
@@ -75,10 +77,9 @@
 
 	nav ol {
 		margin-bottom: 1.5rem;
-		margin-top: 1rem;
+		margin-top: 0;
 		display: flex;
 		align-items: baseline;
-		gap: 1rem;
 		flex-direction: column;
 		list-style-type: none;
 		display: flex;
@@ -101,7 +102,7 @@
 	}
 
 
-	@media (min-width: 600px) {
+	@media (min-width: 80ch) {
 		nav ol {
 			flex-direction: row;
 		}
@@ -113,10 +114,6 @@
 
 		nav ol li .hamburger {
 			display: none;
-		}
-
-		:root {
-			--screen-size: large;
 		}
 	}
 

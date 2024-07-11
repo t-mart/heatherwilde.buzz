@@ -36,7 +36,7 @@
 </script>
 
 <svelte:head>
-	<title>My Optimum Internet - heatherwilde.buzz</title>
+	<title>Heatherwilde Optimum Internet Monitor - heatherwilde.buzz</title>
 </svelte:head>
 
 <h1 class="heading">Heatherwilde Optimum Internet Monitor</h1>
@@ -77,9 +77,9 @@
 </p>
 
 <p>
-	But note: This data may not be accurate. Any computer network, especially at
-	home, is subject to things like power outages, equipment failures, bugs, or
-	a multitude of other issues that may not be caused by Optimum. I will
+	<em>This data may not be accurate.</em> Any computer network, especially at
+	home, is subject to things like bandwidth constraints, bugs, power outages,
+	or a multitude of other issues that may not be caused by Optimum. I will
 	occasionally curate this data to remove any false positives that were under
 	my control.
 </p>

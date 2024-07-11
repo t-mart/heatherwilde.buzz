@@ -1,0 +1,132 @@
+:root {
+	--background-color: #0a0a0a;
+	--text-color: #ededed;
+	--lightness-hover: 15;
+	--up-color: #62c073;
+	--up-hover-color: hsl(from var(--up-color) h s calc(l - var(--lightness-hover)));
+	--down-color: #ff6166;
+	--down-hover-color: hsl(from var(--down-color) h s calc(l - var(--lightness-hover)));
+	--spotty-color: #f2a20d;
+	--spotty-hover-color: hsl(from var(--spotty-color) h s calc(l - var(--lightness-hover)));
+	--non-data-color: #a1a1a1;
+	--non-data-hover-color: hsl(from var(--non-data-color) h s calc(l - var(--lightness-hover)));
+	--text-font-size: 1.25rem;
+	--text-with-background-color: #ededed;
+	--viewport-width-name: small;
+
+	/*
+	These font variables shouldn't really be used outside this file.
+
+	Instead, use the classes defined in fonts.scss on elements.
+
+	These are here for making this base sheet work. If you use them, you have
+	to make sure that you're also setting the font-weight and font-style correctly,
+	or else the browser may not find what you're trying to use.
+	*/
+	--display-black-font-family: 'AT-NameSans-Display-Black', sans-serif;
+	--display-black-italic-font-family: 'AT-NameSans-Display-Black-Italic', sans-serif;
+	--display-bold-font-family: 'AT-NameSans-Display-Bold', sans-serif;
+	--display-bold-italic-font-family: 'AT-NameSans-Display-Bold-Italic', sans-serif;
+	--display-regular-font-family: 'AT-NameSans-Display-Regular', sans-serif;
+	--display-italic-font-family: 'AT-NameSans-Display-Italic', sans-serif;
+
+	--standard-black-font-family: 'AT-NameSans-Standard-Black', sans-serif;
+	--standard-black-italic-font-family: 'AT-NameSans-Standard-Black-Italic', sans-serif;
+	--standard-bold-font-family: 'AT-NameSans-Standard-Bold', sans-serif;
+	--standard-bold-italic-font-family: 'AT-NameSans-Standard-Bold-Italic', sans-serif;
+	--standard-regular-font-family: 'AT-NameSans-Standard-Regular', sans-serif;
+	--standard-italic-font-family: 'AT-NameSans-Standard-Italic', sans-serif;
+
+	--text-black-font-family: 'AT-NameSans-Text-Black', sans-serif;
+	--text-black-italic-font-family: 'AT-NameSans-Text-Black-Italic', sans-serif;
+	--text-bold-font-family: 'AT-NameSans-Text-Bold', sans-serif;
+	--text-bold-italic-font-family: 'AT-NameSans-Text-Bold-Italic', sans-serif;
+	--text-regular-font-family: 'AT-NameSans-Text-Regular', sans-serif;
+	--text-italic-font-family: 'AT-NameSans-Text-Italic', sans-serif;
+}
+
+body,
+svg text {
+	color: var(--text-color);
+	font-size: var(--text-font-size);
+	font-family: var(--text-regular-font-family);
+	font-weight: 400;
+	font-style: normal;
+}
+
+body {
+	background-color: var(--background-color);
+}
+
+h1 {
+	font-size: 2.5rem;
+	font-family: var(--display-black-font-family);
+	font-weight: 900;
+	font-style: normal;
+}
+
+h2 {
+	font-size: 2rem;
+	font-family: var(--standard-black-font-family);
+	font-weight: 700;
+	font-style: normal;
+}
+
+h3 {
+	font-size: 1.75rem;
+	font-family: var(--standard-bold-italic-font-family);
+	font-weight: 700;
+	font-style: normal;
+}
+
+h4 {
+	font-size: 1.5rem;
+	font-family: var(--standard-bold-font-family);
+	font-weight: 700;
+	font-style: normal;
+}
+
+h5 {
+	font-size: 1.25rem;
+	font-family: var(--standard-bold-italic-font-family);
+	font-weight: 700;
+	font-style: normal;
+}
+
+a {
+	color: var(--up-color);
+	text-decoration: underline;
+}
+
+a:visited {
+	color: var(--up-color);
+}
+
+a:hover {
+	color: var(--up-hover-color);
+}
+
+a:focus {
+	outline: 0.15em dashed var(--up-color);
+	outline-offset: 0.1em;
+	border-radius: 0.25em;
+}
+
+button {
+	color: var(--text-color);
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+@media (min-width: 80ch) {
+	:root {
+		--viewport-width-name: medium;
+	}
+}
+
+@media (min-width: 120ch) {
+	:root {
+		--viewport-width-name: large;
+	}
+}

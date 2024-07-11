@@ -1,0 +1,10 @@
+@layer reset, base;
+
+@layer reset {
+    @import 'reset.scss';
+}
+
+@layer base {
+    @import 'fonts.scss';
+    @import 'base.scss';
+}
