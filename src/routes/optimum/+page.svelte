@@ -78,7 +78,8 @@
 
 <p>
 	But note: This data may not be accurate. Any computer network, especially at
-	home, is subject to things like power outages, equipment failures, bugs, and
-	other issues that can cause downtime. I will occasionally curate this data
-	to remove any false positives that were under my control.
+	home, is subject to things like power outages, equipment failures, bugs, or
+	a multitude of other issues that may not be caused by Optimum. I will
+	occasionally curate this data to remove any false positives that were under
+	my control.
 </p>
