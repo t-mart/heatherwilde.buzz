@@ -1,20 +1,16 @@
 import { DateTime } from 'luxon';
 
-type APIProbe = {
-	ts: number;
-	up: boolean;
+export type Incident = {
+	startTime: DateTime;
+	endTime: DateTime | null;
 };
 
-type Probe = {
-	datetime: DateTime;
-	wasUp: boolean;
+export type APIIncident = {
+	startTime: string;
+	endTime: string | null;
 };
 
-function toProbe(apiProbe: APIProbe): Probe {
-	return {
-		datetime: DateTime.fromSeconds(apiProbe.ts),
-		wasUp: apiProbe.up
-	};
-}
-
-export { type APIProbe, type Probe, toProbe };
+export type Probe = {
+	time: DateTime;
+	duration: number;
+};

@@ -55,11 +55,10 @@
 	.container {
 		margin-left: auto;
 		margin-right: auto;
-		max-width: 800px;
+		max-width: 70ch;
 		padding-left: 2rem;
 		padding-right: 2rem;
 		margin-top: 2rem;
-
 	}
 
 	nav a {
@@ -101,6 +100,7 @@
 		gap: 1rem;
 	}
 
+
 	@media (min-width: 600px) {
 		nav ol {
 			flex-direction: row;
@@ -113,6 +113,10 @@
 
 		nav ol li .hamburger {
 			display: none;
+		}
+
+		:root {
+			--screen-size: large;
 		}
 	}
 

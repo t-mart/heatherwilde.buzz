@@ -34,7 +34,8 @@
 <style>
 	.cta {
 		font-size: 4rem;
-		margin-block-start: 1em;
+		margin-block-start: 2.5rem;
+		margin-block-end: 2.5rem;
 		text-align: center;
 	}
 

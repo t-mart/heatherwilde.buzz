@@ -42,6 +42,8 @@
 		--heading-font-family: 'ATNameSansDisplayTrial-Black', sans-serif;
 		--text-font-family: 'ATNameSansDisplayTrial-Regular', sans-serif;
 		--text-font-size: 1.5rem;
+		--text-with-background-color: #ededed;
+		--viewport-width-name: small;
 	}
 
 	@media (prefers-color-scheme: dark) {
@@ -53,7 +55,20 @@
 		}
 	}
 
-	body, svg text {
+	@media (min-width: 70ch) {
+		:root {
+			--viewport-width-name: medium;
+		}
+	}
+
+	@media (min-width: 100ch) {
+		:root {
+			--viewport-width-name: large;
+		}
+	}
+
+	body,
+	svg text {
 		color: var(--text-color);
 		font-family: var(--text-font-family);
 		font-size: var(--text-font-size);
