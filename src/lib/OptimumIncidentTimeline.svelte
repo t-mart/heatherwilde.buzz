@@ -118,7 +118,7 @@
 {/if}
 
 <div class="uptime">
-	<h3 class="heading">Uptime</h3>
+	<h3 class="heading">Outage Incidents</h3>
 
 	<svg
 		preserveAspectRatio="none"
@@ -149,7 +149,7 @@
 	</div>
 </div>
 
-<h3 class="heading">Incident History</h3>
+<h3 class="heading">Outage History</h3>
 
 <ol class="descriptions">
 	{#each incidentDescriptions as incident}
