@@ -71,8 +71,9 @@
 
 <p>
 	You may find this useful if your Optimum internet doesn't seem to be
-	working, and want know if its just you or not. Better yet, you can call to
-	complain with this data to back you up!
+	working, and want know if its just you or not. Better yet, you can <a
+	href="https://www.optimum.net/support/contact-us/">call</a> to report so
+	with this data to back you up!
 </p>
 
 <p>
