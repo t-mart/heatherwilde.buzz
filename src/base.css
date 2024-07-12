@@ -1,19 +1,18 @@
 :root {
 	--background-color: #0a0a0a;
 	--text-color: #ededed;
-	--lightness-hover: 15;
+	--alpha-hover: 75%;
 	--up-color: #62c073;
-	--up-hover-color: hsl(from var(--up-color) h s calc(l - var(--lightness-hover)));
+	--up-hover-color: hsl(from var(--up-color) h s l / var(--alpha-hover));
 	--down-color: #ff6166;
-	--down-hover-color: hsl(from var(--down-color) h s calc(l - var(--lightness-hover)));
+	--down-hover-color: hsl(from var(--down-color) h s l / var(--alpha-hover));
 	--spotty-color: #f2a20d;
-	--spotty-hover-color: hsl(from var(--spotty-color) h s calc(l - var(--lightness-hover)));
+	--spotty-hover-color: hsl(from var(--spotty-color) h s l / var(--alpha-hover));
 	--non-data-color: #a1a1a1;
-	--non-data-hover-color: hsl(from var(--non-data-color) h s calc(l - var(--lightness-hover)));
+	--non-data-hover-color: hsl(from var(--non-data-color) h s l / var(--alpha-hover));
 	--text-font-size: 1.25rem;
 	--text-with-background-color: #ededed;
 	--viewport-width-name: small;
-	--z-index-tooltip: 222;
 
 	/*
 	These font variables shouldn't really be used outside this file.

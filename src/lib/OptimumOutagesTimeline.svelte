@@ -1,31 +1,26 @@
 <script lang="ts">
-	import { type Incident } from '$lib';
+	import { type Outage, type Day } from '$lib';
+	import OptimumOutagesTimelineTooltip from './OptimumOutagesTimelineTooltip.svelte';
 	import { screenSizeStore } from '$lib/viewportWidthStore';
-	import { onDestroy, tick } from 'svelte';
+	import { onDestroy } from 'svelte';
 	import { DateTime, Interval } from 'luxon';
 	import { PUBLIC_START_OF_SERVICE_DATE } from '$env/static/public';
 	import { computePosition, shift, flip, offset, arrow } from '@floating-ui/dom';
 
 	let viewportWidthVar: string;
-	export let incidents: Incident[];
+	export let outages: Outage[];
 	const startOfService = DateTime.fromISO(PUBLIC_START_OF_SERVICE_DATE).startOf('day');
 	let tooltipDay: Day | null = null;
 	let tooltipElement: HTMLDivElement;
 	let tooltipArrowElement: HTMLDivElement;
 
 	$: dayCount = viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
-	$: days = makeDays(dayCount, incidents);
-	$: uptimePercentage = calculateUptime(dayCount, incidents);
+	$: days = makeDays(dayCount, outages);
+	$: uptimePercentage = calculateUptime(dayCount, outages);
 
-	type Day = {
-		start: DateTime;
-		in_service: boolean;
-		incidents: Incident[];
-	};
-
-	function makeDays(dayCount: number, incidents: Incident[]): Day[] {
-		// sort incidents by property startTime, from earliest to latest
-		incidents = incidents.sort((a, b) => a.startTime.toMillis() - b.startTime.toMillis());
+	function makeDays(dayCount: number, outages: Outage[]): Day[] {
+		// sort outages by property startTime, from earliest to latest
+		outages = outages.sort((a, b) => a.startTime.toMillis() - b.startTime.toMillis());
 
 		const days: Day[] = [];
 		const serviceInterval = Interval.fromDateTimes(startOfService, DateTime.now());
@@ -36,36 +31,33 @@
 			const curInterval = Interval.fromDateTimes(curDate, curDate.plus({ days: 1 }));
 			const in_service = serviceInterval.contains(curDate);
 			// this is n^2, but it's fine for now
-			const incidentsForDay = incidents.filter((incident) => {
-				const incidentInterval = Interval.fromDateTimes(
-					incident.startTime,
-					incident.endTime ?? now
-				);
-				return curInterval.overlaps(incidentInterval);
+			const outagesForDay = outages.filter((outage) => {
+				const outageInterval = Interval.fromDateTimes(outage.startTime, outage.endTime ?? now);
+				return curInterval.overlaps(outageInterval);
 			});
-			days.push({ start: curDate, in_service, incidents: incidentsForDay });
+			days.push({ start: curDate, in_service, outages: outagesForDay });
 			curDate = curDate.plus({ days: 1 });
 		}
 
 		return days;
 	}
 
-	function calculateUptime(dayCount: number, incidents: Incident[]): number {
+	function calculateUptime(dayCount: number, outages: Outage[]): number {
 		const start = DateTime.fromMillis(
 			Math.max(startOfService.toMillis(), DateTime.now().minus({ days: dayCount }).toMillis())
 		);
 		const end = DateTime.now();
 		const totalDuration = Interval.fromDateTimes(start, end).toDuration();
 		let uptimeDuration = Interval.fromDateTimes(start, end).toDuration();
-		incidents.forEach((incident) => {
-			const incidentStartMin = DateTime.fromMillis(
-				Math.max(incident.startTime.toMillis(), start.toMillis())
+		outages.forEach((outage) => {
+			const outageStartMin = DateTime.fromMillis(
+				Math.max(outage.startTime.toMillis(), start.toMillis())
 			);
-			const incidentDuration = Interval.fromDateTimes(
-				incidentStartMin,
-				incident.endTime ?? DateTime.now()
+			const outageDuration = Interval.fromDateTimes(
+				outageStartMin,
+				outage.endTime ?? DateTime.now()
 			).toDuration();
-			uptimeDuration = uptimeDuration.minus(incidentDuration);
+			uptimeDuration = uptimeDuration.minus(outageDuration);
 		});
 
 		return (uptimeDuration.toMillis() / totalDuration.toMillis()) * 100;
@@ -74,7 +66,6 @@
 	async function showTooltip(event: MouseEvent, day: Day) {
 		tooltipDay = day;
 		const target = event.target as SVGElement;
-		await tick();
 
 		let {
 			x: left,
@@ -103,7 +94,6 @@
 			bottom: 'top',
 			left: 'right'
 		}[placement.split('-')[0]] as string;
-		console.log(staticSide);
 
 		if (middlewareData.arrow) {
 			const { x: arrowX, y: arrowY } = middlewareData.arrow;
@@ -145,9 +135,9 @@
 			{#each days as day, index}
 				<rect
 					class={day.in_service
-						? day.incidents.length > 0
-							? 'hasIncident'
-							: 'noIncident'
+						? day.outages.length > 0
+							? 'hasOutage'
+							: 'noOutage'
 						: 'outOfService'}
 					width="3"
 					height="34"
@@ -166,13 +156,7 @@
 
 		<div id="tooltip" bind:this={tooltipElement} role="tooltip">
 			{#if tooltipDay}
-				<p>
-					{tooltipDay?.start.toLocaleString({
-						month: 'long',
-						day: 'numeric',
-						year: 'numeric'
-					})}
-				</p>
+				<OptimumOutagesTimelineTooltip day={tooltipDay} />
 			{/if}
 			<div id="arrow" bind:this={tooltipArrowElement}></div>
 		</div>
@@ -203,31 +187,22 @@
 		color: var(--background-color);
 		z-index: 3;
 		border-radius: 0.5rem;
-		padding: 0.5rem 1.25rem;
 		opacity: 0;
 	}
 
-	#tooltip p {
-		margin: 0;
-	}
-
-	.viz {
-		z-index: 2;
-	}
-
-	.hasIncident {
+	.hasOutage {
 		fill: var(--down-color);
 	}
 
-	.hasIncident:hover {
+	.hasOutage:hover {
 		fill: var(--down-hover-color);
 	}
 
-	.noIncident {
+	.noOutage {
 		fill: var(--up-color);
 	}
 
-	.noIncident:hover {
+	.noOutage:hover {
 		fill: var(--up-hover-color);
 	}
 

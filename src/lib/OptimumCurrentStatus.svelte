@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { type Incident } from '$lib';
+	import { type Outage } from '$lib';
 
-	export let incidents: Incident[];
-	$: status = getCurrentStatus(incidents);
+	export let outages: Outage[];
+	$: status = getCurrentStatus(outages);
 
 	enum Status {
 		Up = 'Up',
 		Down = 'Down'
 	}
 
-	function getCurrentStatus(incidents: Incident[]): Status {
-		// if last incident in incidents has a falsy end time, then we're down
-		const lastIncident = incidents[incidents.length - 1];
-		if (lastIncident.endTime) {
+	function getCurrentStatus(outages: Outage[]): Status {
+		// if last outage in outages has a falsy end time, then we're down
+		const lastOutage = outages[outages.length - 1];
+		if (lastOutage.endTime) {
 			return Status.Up;
 		}
 		return Status.Down;

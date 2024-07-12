@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { type Incident, type Probe, type APIIncident } from '$lib';
+	import { type Outage, type Probe, type APIOutage } from '$lib';
 	import OptimumCurrentStatus from '$lib/OptimumCurrentStatus.svelte';
 	import OptimumOutagesTimeline from '$lib/OptimumOutagesTimeline.svelte';
 	import OptimumOutagesHistory from '$lib/OptimumOutagesHistory.svelte';
 	import LinePlot from '$lib/LinePlot.svelte';
 	import { Duration, DateTime } from 'luxon';
 
-	let incidents: Incident[] | null = null;
+	let outages: Outage[] | null = null;
 	let probes: Probe[] | null = null;
 	let error: string | null = null;
 	const fetchIntervalDuration = Duration.fromObject({ minutes: 1 }); // 1 minutes
@@ -21,9 +21,9 @@
 	}
 
 	async function fetchData() {
-		incidents = (await fetchEndpoint<APIIncident>('/api/optimum-outages')).map((incident) => ({
-			startTime: DateTime.fromISO(incident.startTime),
-			endTime: incident.endTime ? DateTime.fromISO(incident.endTime) : null
+		outages = (await fetchEndpoint<APIOutage>('/api/optimum-outages')).map((outage) => ({
+			startTime: DateTime.fromISO(outage.startTime),
+			endTime: outage.endTime ? DateTime.fromISO(outage.endTime) : null
 		}));
 		probes = await fetchEndpoint('/api/optimum-latency');
 	}
@@ -45,12 +45,12 @@
 <div class="internet">
 	{#if error}
 		<p>Error: {error}</p>
-	{:else if incidents}
-		{#if incidents.length > 0}
-			<OptimumCurrentStatus {incidents} />
-			<OptimumOutagesTimeline {incidents} />
-			<OptimumOutagesHistory {incidents} />
-			<!-- <LinePlot {incidents} /> -->
+	{:else if outages}
+		{#if outages.length > 0}
+			<OptimumCurrentStatus {outages} />
+			<OptimumOutagesTimeline {outages} />
+			<OptimumOutagesHistory {outages} />
+			<!-- <LinePlot {outages} /> -->
 		{:else}
 			<p>No data</p>
 		{/if}

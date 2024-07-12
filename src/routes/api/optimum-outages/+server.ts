@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import type { Incident } from '$lib';
+import type { Outage } from '$lib';
 import { DynamoDBClient, QueryCommand, AttributeValue } from '@aws-sdk/client-dynamodb';
 import { DateTime, Duration } from 'luxon';
 import { INCIDENT_TABLE_NAME, PROBE_TARGET_HOST_NAME } from '$env/static/private';
@@ -43,7 +43,7 @@ export const GET: RequestHandler = async ({}) => {
 	});
 
 	const response = await client.send(command);
-	let incidents: Incident[] = [];
+	let incidents: Outage[] = [];
 	if (response.Items) {
 		try {
 			incidents = response.Items.map(itemToIncident);

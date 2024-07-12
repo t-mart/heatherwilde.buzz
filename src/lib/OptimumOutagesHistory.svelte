@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { type Incident } from '$lib';
+	import { type Outage } from '$lib';
 	import { DateTime, Interval, Duration } from 'luxon';
 
 	const millisecondsInMinute = 1000 * 60;
-	export let incidents: Incident[];
-	
-	$: incidentDescriptions = incidents
+	export let outages: Outage[];
+
+	$: outageHistoryItems = outages
 		.slice()
 		.sort((a, b) => b.startTime.toMillis() - a.startTime.toMillis())
-		.map(getIncidentHistoryItem);
+		.map(getOutageHistoryItem);
 
 	type OutageHistoryItem = {
 		startTime: string;
@@ -16,13 +16,13 @@
 		ongoing: boolean;
 	};
 
-	function getIncidentHistoryItem(incident: Incident): OutageHistoryItem {
-		const startTime = incident.startTime.toLocaleString({
+	function getOutageHistoryItem(outage: Outage): OutageHistoryItem {
+		const startTime = outage.startTime.toLocaleString({
 			weekday: 'short',
 			month: 'long',
 			day: 'numeric',
 			year: 'numeric',
-			hour: '2-digit',
+			hour: 'numeric',
 			minute: '2-digit',
 			timeZoneName: 'short'
 		});
@@ -31,14 +31,14 @@
 		// just clear out the milliseconds and seconds. this is a hack.
 		const roundedDurationMillis = Math.max(
 			Math.floor(
-				Interval.fromDateTimes(incident.startTime, incident.endTime ?? DateTime.now())
+				Interval.fromDateTimes(outage.startTime, outage.endTime ?? DateTime.now())
 					.toDuration()
 					.toMillis() / millisecondsInMinute
 			) * millisecondsInMinute,
 			millisecondsInMinute // at least one minute, because we've just cleared them out
 		);
 		const duration = Duration.fromMillis(roundedDurationMillis).rescale().toHuman();
-		const ongoing = !incident.endTime;
+		const ongoing = !outage.endTime;
 		return { startTime, duration, ongoing };
 	}
 </script>
@@ -50,10 +50,10 @@
 	</div>
 
 	<ol class="items">
-		{#each incidentDescriptions as incident}
+		{#each outageHistoryItems as outage}
 			<li>
-				{#if incident.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
-				<time>{incident.startTime}</time> - {incident.duration}
+				{#if outage.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
+				<time>{outage.startTime}</time> - {outage.duration}
 			</li>
 		{/each}
 	</ol>
@@ -76,5 +76,11 @@
 		display: flex;
 		gap: 1rem;
 		align-items: baseline;
+		flex-wrap: wrap;
+		margin-bottom: 1em;
+	}
+
+	.heading > * {
+		margin-bottom: 0;
 	}
 </style>
