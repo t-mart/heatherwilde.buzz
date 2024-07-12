@@ -21,11 +21,11 @@
 	}
 
 	async function fetchData() {
-		outages = (await fetchEndpoint<APIOutage>('/api/optimum-outages')).map((outage) => ({
+		outages = (await fetchEndpoint<APIOutage>('/api/optimum/outages')).map((outage) => ({
 			startTime: DateTime.fromISO(outage.startTime),
 			endTime: outage.endTime ? DateTime.fromISO(outage.endTime) : null
 		}));
-		probes = await fetchEndpoint('/api/optimum-latency');
+		probes = await fetchEndpoint('/api/optimum/latency');
 	}
 
 	onMount(fetchData);
