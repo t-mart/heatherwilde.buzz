@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { type Outage, type Day } from '$lib';
 	import OptimumOutagesTimelineTooltip from './OptimumOutagesTimelineTooltip.svelte';
+	import OptimumGraphPanel from './OptimumGraphPanel.svelte';
 	import { screenSizeStore } from '$lib/viewportWidthStore';
 	import { onDestroy } from 'svelte';
 	import { DateTime, Interval } from 'luxon';
@@ -121,10 +122,8 @@
 	});
 </script>
 
-<div class="container">
-	<h4 class="heading">Outages</h4>
-
-	<div class="viz">
+<OptimumGraphPanel title="Outages">
+	<slot>
 		<svg
 			preserveAspectRatio="none"
 			height="3rem"
@@ -160,16 +159,16 @@
 			{/if}
 			<div id="arrow" bind:this={tooltipArrowElement}></div>
 		</div>
-	</div>
 
-	<div class="legend">
-		<span>{dayCount} days ago</span>
-		<div class="spacer" />
-		<span>{parseFloat(uptimePercentage.toFixed(2)).toString()}% uptime</span>
-		<div class="spacer" />
-		<span>Today</span>
-	</div>
-</div>
+		<div class="legend">
+			<span>{dayCount} days ago</span>
+			<div class="spacer" />
+			<span>{parseFloat(uptimePercentage.toFixed(2)).toString()}% uptime</span>
+			<div class="spacer" />
+			<span>Today</span>
+		</div></slot
+	>
+</OptimumGraphPanel>
 
 <style>
 	#arrow {
@@ -216,17 +215,6 @@
 
 	svg {
 		width: 100%;
-	}
-
-	.container {
-		padding: 1rem;
-		border: 1px solid var(--non-data-color);
-		border-radius: 0.5rem;
-		margin-bottom: 2rem;
-	}
-
-	h4 {
-		margin: 0 0 0.5rem 0;
 	}
 
 	.legend {
