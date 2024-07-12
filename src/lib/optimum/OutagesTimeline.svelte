@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { type Outage, type Day } from '$lib';
-	import OptimumOutagesTimelineTooltip from './OptimumOutagesTimelineTooltip.svelte';
-	import OptimumGraphPanel from './OptimumGraphPanel.svelte';
+	import OptimumOutagesTimelineTooltip from './OutagesTimelineTooltip.svelte';
+	import OptimumGraphPanel from './GraphPanel.svelte';
 	import { screenSizeStore } from '$lib/viewportWidthStore';
 	import { onDestroy } from 'svelte';
 	import { DateTime, Interval } from 'luxon';

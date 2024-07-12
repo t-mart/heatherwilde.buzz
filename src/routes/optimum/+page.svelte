@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { type Outage, type Probe, type APIOutage } from '$lib';
-	import OptimumCurrentStatus from '$lib/OptimumCurrentStatus.svelte';
-	import OptimumOutagesTimeline from '$lib/OptimumOutagesTimeline.svelte';
-	import OptimumOutagesHistory from '$lib/OptimumOutagesHistory.svelte';
-	import LinePlot from '$lib/LinePlot.svelte';
+	import CurrentStatus from '$lib/optimum/CurrentStatus.svelte';
+	import OutagesTimeline from '$lib/optimum/OutagesTimeline.svelte';
+	import OutagesHistory from '$lib/optimum/OutagesHistory.svelte';
+	import Latency from '$lib/optimum/Latency.svelte';
 	import { Duration, DateTime } from 'luxon';
 
 	let outages: Outage[] | null = null;
@@ -47,10 +47,10 @@
 		<p>Error: {error}</p>
 	{:else if outages}
 		{#if outages.length > 0}
-			<OptimumCurrentStatus {outages} />
-			<OptimumOutagesTimeline {outages} />
-			<OptimumOutagesHistory {outages} />
-			<!-- <LinePlot {outages} /> -->
+			<CurrentStatus {outages} />
+			<OutagesTimeline {outages} />
+			<Latency />
+			<OutagesHistory {outages} />
 		{:else}
 			<p>No data</p>
 		{/if}
