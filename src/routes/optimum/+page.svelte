@@ -15,7 +15,7 @@
 	async function fetchEndpoint<T>(path: string): Promise<T[]> {
 		const response = await fetch(path);
 		if (!response.ok) {
-			throw new Error('Unable to fetch incidents');
+			throw new Error(`Unable to fetch enpoint ${path}: ${response.status} ${response.statusText}`);
 		}
 		return <T[]>await response.json();
 	}

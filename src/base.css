@@ -13,6 +13,7 @@
 	--text-font-size: 1.25rem;
 	--text-with-background-color: #ededed;
 	--viewport-width-name: small;
+	--z-index-tooltip: 222;
 
 	/*
 	These font variables shouldn't really be used outside this file.
@@ -43,6 +44,12 @@
 	--text-bold-italic-font-family: 'AT-NameSans-Text-Bold-Italic', sans-serif;
 	--text-regular-font-family: 'AT-NameSans-Text-Regular', sans-serif;
 	--text-italic-font-family: 'AT-NameSans-Text-Italic', sans-serif;
+}
+
+*,
+::before,
+::after {
+	box-sizing: border-box;
 }
 
 body,

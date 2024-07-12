@@ -8,7 +8,9 @@
 	let viewportWidthVar: string;
 	export let incidents: Incident[];
 	const startOfService = DateTime.fromISO(PUBLIC_START_OF_SERVICE_DATE).startOf('day');
-	let selectedDay: DateTime | null = null;
+	let tooltipDay: Day | null = null;
+	let tooltipX = 0;
+	let tooltipY = 0;
 
 	$: dayCount = viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
 	$: days = makeDays(dayCount, incidents);
@@ -68,6 +70,20 @@
 		return (uptimeDuration.toMillis() / totalDuration.toMillis()) * 100;
 	}
 
+	function showTooltip(event: MouseEvent, day: Day) {
+		tooltipDay = day;
+		const target = event.target as SVGElement;
+		const targetRect = target.getBoundingClientRect();
+		const parentRect = target.parentElement?.getBoundingClientRect() as DOMRect;
+
+		tooltipX = targetRect.x - (parentRect?.x as number);
+		tooltipY = targetRect.height;
+	}
+
+	function hideTooltip() {
+		tooltipDay = null;
+	}
+
 	const unsubscribe = screenSizeStore.subscribe((value) => {
 		viewportWidthVar = value;
 	});
@@ -77,24 +93,46 @@
 	});
 </script>
 
-<div class="uptime">
-	<h3 class="heading">Outages</h3>
+<div class="container">
+	<h4 class="heading">Outages</h4>
 
-	<svg preserveAspectRatio="none" height="3rem" viewBox={`0 0 ${days.length * 5 - 2} 34`}>
-		{#each days as day, index}
-			<rect
-				class={day.in_service
-					? day.incidents.length > 0
-						? 'hasIncident'
-						: 'noIncident'
-					: 'outOfService'}
-				width="3"
-				height="34"
-				y="0"
-				x={index * 5}
-			/>
-		{/each}
-	</svg>
+	<div class="viz">
+		<svg
+			preserveAspectRatio="none"
+			height="3rem"
+			viewBox={`0 0 ${days.length * 5 - 2} 34`}
+			on:mouseleave={hideTooltip}
+		>
+			{#each days as day, index}
+				<rect
+					class={day.in_service
+						? day.incidents.length > 0
+							? 'hasIncident'
+							: 'noIncident'
+						: 'outOfService'}
+					width="3"
+					height="34"
+					y="0"
+					x={index * 5}
+					on:mouseenter={(event) => showTooltip(event, day)}
+					on:click={(event) => showTooltip(event, day)}
+				/>
+			{/each}
+		</svg>
+
+		{#if tooltipDay}
+			<div
+				class="tooltip"
+				style="top: {tooltipY}px; left: {tooltipX}px;"
+			>
+				<p>{tooltipDay.start.toLocaleString({
+					month: 'long',
+					day: 'numeric',
+					year: 'numeric',
+				})}</p>
+			</div>
+		{/if}
+	</div>
 
 	<div class="legend">
 		<span>{dayCount} days ago</span>
@@ -106,6 +144,19 @@
 </div>
 
 <style>
+	.tooltip {
+		position: absolute;
+		background-color: var(--text-color);
+		color: var(--background-color);
+		border: 1px solid black;
+		z-index: 3;
+	}
+
+	.viz {
+		position: relative;
+		z-index: 2;
+	}
+
 	.hasIncident {
 		fill: var(--down-color);
 	}
@@ -134,15 +185,15 @@
 		width: 100%;
 	}
 
-	.uptime {
+	.container {
 		padding: 1rem;
 		border: 1px solid var(--non-data-color);
 		border-radius: 0.5rem;
 		margin-bottom: 2rem;
 	}
 
-	.uptime h3 {
-		margin: 0 0 1rem 0;
+	h4 {
+		margin: 0 0 0.5rem 0;
 	}
 
 	.legend {

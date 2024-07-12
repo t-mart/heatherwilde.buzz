@@ -43,7 +43,7 @@
 	.status {
 		background-color: var(--up-color);
 		color: var(--text-with-background-color);
-		padding: 0.5rem 0.75rem;
+		padding: 0.5rem 1.25rem;
 		border-radius: 0.25rem;
 		text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
 		text-align: center;

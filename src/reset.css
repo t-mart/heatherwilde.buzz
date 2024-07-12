@@ -2,12 +2,6 @@
  * https://github.com/jtrost/Complete-CSS-Reset
 */
 
-*,
-::before,
-::after {
-	box-sizing: border-box;
-}
-
 /* Displays for HTML 5 */
 article, aside, audio, command, datagrid, details, dialog, embed, 
 figcaption, figure, footer, header, hgroup, menu, nav, section, summary,
