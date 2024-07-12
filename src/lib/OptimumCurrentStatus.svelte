@@ -35,9 +35,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
-		align-items: baseline;;
-		margin-bottom: 3rem;
-		margin-top: 3rem;
+		align-items: baseline;
 		column-gap: 1rem;
 		row-gap: 0.5rem;
 	}

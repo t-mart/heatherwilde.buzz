@@ -7,7 +7,7 @@
 </svelte:head>
 
 <div class="howdy">
-	<h1 class="heading">Howdy, Heatherwilde neighbor!</h1>
+	<h1>Howdy, Heatherwilde neighbor!</h1>
 
 	<ul>
 		<li>Party or event coming up?</li>
@@ -22,7 +22,7 @@
 		Come on by <br/><a href={PUBLIC_DISCORD_INVITE_LINK}>Discord</a><br/> and talk about it!
 	</p>
 
-	<p>
+	<p class="me">
 		Hi! I'm Tim and I live in <a
 			href="https://www.google.com/maps/place/Heatherwilde,+Pflugerville,+TX+78660/@30.457596,-97.6332716,15z/"
 			>Heatherwilde</a
@@ -36,16 +36,15 @@
 		font-size: 4rem;
 		margin-block-start: 2.5rem;
 		margin-block-end: 2.5rem;
-		text-align: center;
 	}
 
 
 	.howdy {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		text-align: center;
 		font-size: 1.5rem;
+	}
+
+	.howdy > * {
+		text-align: center;
 	}
 
 	ul {
@@ -53,7 +52,13 @@
 		padding: 0;
 	}
 
-	li {
+	ul > li {
+		text-align: inherit;
 		margin-top: 0.25rem;
 	}
+
+	.me {
+		text-align: left;
+	}
+
 </style>

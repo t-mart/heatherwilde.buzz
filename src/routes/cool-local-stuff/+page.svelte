@@ -41,9 +41,6 @@
 </div>
 
 <style>
-	.cta {
-		margin-top: 2.5rem;
-	}
 
 	li {
 		font-size: 2rem;

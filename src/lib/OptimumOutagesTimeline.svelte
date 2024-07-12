@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { type Incident } from '$lib';
-	import { screenSizeStore } from '$lib/screenSizeStore';
+	import { screenSizeStore } from '$lib/viewportWidthStore';
 	import { onDestroy } from 'svelte';
-	import { DateTime, Interval, Duration } from 'luxon';
+	import { DateTime, Interval } from 'luxon';
 	import { PUBLIC_START_OF_SERVICE_DATE } from '$env/static/public';
 
 	let viewportWidthVar: string;
@@ -13,10 +13,6 @@
 	$: dayCount = viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
 	$: days = makeDays(dayCount, incidents);
 	$: uptimePercentage = calculateUptime(dayCount, incidents);
-	$: incidentDescriptions = incidents
-		.slice()
-		.sort((a, b) => b.startTime.toMillis() - a.startTime.toMillis())
-		.map(getIncidentDescription);
 
 	type Day = {
 		start: DateTime;
@@ -79,38 +75,6 @@
 	onDestroy(() => {
 		unsubscribe();
 	});
-
-	type IncidentDescription = {
-		startTime: string;
-		duration: string;
-		ongoing: boolean;
-	};
-
-	function getIncidentDescription(incident: Incident): IncidentDescription {
-		// luxon's toHuman doesn't do rounding nicely. see the comments on this
-		// popular issue: https://github.com/moment/luxon/issues/1134. here, we
-		// just clear out the milliseconds and seconds. this is a hack.
-		const millisecondsInMinute = 1000 * 60;
-		const startTime = incident.startTime.toLocaleString({
-			month: 'long',
-			day: 'numeric',
-			year: 'numeric',
-			hour: '2-digit',
-			minute: '2-digit',
-			timeZoneName: 'short'
-		});
-		const roundedDurationMillis = Math.max(
-			Math.floor(
-				Interval.fromDateTimes(incident.startTime, incident.endTime ?? DateTime.now())
-					.toDuration()
-					.toMillis() / millisecondsInMinute
-			) * millisecondsInMinute,
-			millisecondsInMinute // at least one minute, because we've just cleared them out
-		);
-		const duration = Duration.fromMillis(roundedDurationMillis).rescale().toHuman();
-		const ongoing = !incident.endTime;
-		return { startTime, duration, ongoing };
-	}
 </script>
 
 <div class="uptime">
@@ -140,20 +104,6 @@
 		<span>Today</span>
 	</div>
 </div>
-
-<div class="outage-history-heading">
-	<h3>Outage History</h3>
-	<a href="/api/optimum-incidents">Download JSON</a>
-</div>
-
-<ol class="descriptions">
-	{#each incidentDescriptions as incident}
-		<li>
-			{#if incident.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
-			{incident.startTime} - {incident.duration}
-		</li>
-	{/each}
-</ol>
 
 <style>
 	.hasIncident {
@@ -188,6 +138,7 @@
 		padding: 1rem;
 		border: 1px solid var(--non-data-color);
 		border-radius: 0.5rem;
+		margin-bottom: 2rem;
 	}
 
 	.uptime h3 {
@@ -208,19 +159,5 @@
 		flex: 1;
 		height: 1px;
 		background-color: var(--non-data-color);
-	}
-
-	.descriptions {
-		list-style-type: disc;
-	}
-
-	.ongoing {
-		color: var(--down-color);
-	}
-
-	.outage-history-heading {
-		display: flex;
-		gap: 1rem;
-		align-items: baseline;
 	}
 </style>

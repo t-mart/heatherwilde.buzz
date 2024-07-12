@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { type Incident, type Probe, type APIIncident } from '$lib';
-	import OptimumStatus from '$lib/OptimumStatus.svelte';
-	import OptimumIncidentTimeline from '$lib/OptimumIncidentTimeline.svelte';
+	import OptimumCurrentStatus from '$lib/OptimumCurrentStatus.svelte';
+	import OptimumOutagesTimeline from '$lib/OptimumOutagesTimeline.svelte';
+	import OptimumOutagesHistory from '$lib/OptimumOutagesHistory.svelte';
 	import LinePlot from '$lib/LinePlot.svelte';
 	import { Duration, DateTime } from 'luxon';
 
@@ -20,7 +21,7 @@
 	}
 
 	async function fetchData() {
-		incidents = (await fetchEndpoint<APIIncident>('/api/optimum-incidents')).map((incident) => ({
+		incidents = (await fetchEndpoint<APIIncident>('/api/optimum-outages')).map((incident) => ({
 			startTime: DateTime.fromISO(incident.startTime),
 			endTime: incident.endTime ? DateTime.fromISO(incident.endTime) : null
 		}));
@@ -46,8 +47,9 @@
 		<p>Error: {error}</p>
 	{:else if incidents}
 		{#if incidents.length > 0}
-			<OptimumStatus {incidents} />
-			<OptimumIncidentTimeline {incidents} />
+			<OptimumCurrentStatus {incidents} />
+			<OptimumOutagesTimeline {incidents} />
+			<OptimumOutagesHistory {incidents} />
 			<!-- <LinePlot {incidents} /> -->
 		{:else}
 			<p>No data</p>
@@ -77,9 +79,9 @@
 </p>
 
 <p>
-	<em>This data may not be accurate.</em> Any computer network, especially at
-	home, is subject to things like bandwidth constraints, bugs, power outages,
-	or a multitude of other issues that may not be caused by Optimum. I will
+	<em>This data may not be accurate:</em> Any computer network, especially at
+	home, is subject to bandwidth constraints, bugs, power outages, or a
+	multitude of other issues that may not be caused by Optimum. I will
 	occasionally curate this data to remove any false positives that were under
 	my control.
 </p>

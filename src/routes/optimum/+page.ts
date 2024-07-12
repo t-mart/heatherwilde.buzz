@@ -1,2 +1,3 @@
-// we need this route to run in the browser because we are using browser-specific APIs
+// we need this route to run in the browser because the viewport width store
+// uses the browser's ResizeObserver
 export const ssr = false;

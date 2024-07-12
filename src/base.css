@@ -52,10 +52,41 @@ svg text {
 	font-family: var(--text-regular-font-family);
 	font-weight: 400;
 	font-style: normal;
+	line-height: 1.25;
 }
 
 body {
 	background-color: var(--background-color);
+}
+
+ol,
+ul {
+	margin-block-end: 2em;
+	padding-inline-start: 2em;
+}
+
+ul {
+	list-style: disc;
+}
+
+ol {
+	list-style: decimal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+ol,
+p {
+	margin-bottom: 1em;
+}
+
+li {
+	margin-bottom: 0.5em;
 }
 
 h1 {
@@ -91,6 +122,17 @@ h5 {
 	font-family: var(--standard-bold-italic-font-family);
 	font-weight: 700;
 	font-style: normal;
+}
+
+h6 {
+	font-size: 1rem;
+	font-family: var(--standard-bold-font-family);
+	font-weight: 700;
+	font-style: normal;
+}
+
+em {
+	font-style: italic;
 }
 
 a {

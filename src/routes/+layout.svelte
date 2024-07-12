@@ -76,8 +76,6 @@
 	}
 
 	nav ol {
-		margin-bottom: 1.5rem;
-		margin-top: 0;
 		display: flex;
 		align-items: baseline;
 		flex-direction: column;
