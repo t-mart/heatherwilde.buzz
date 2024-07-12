@@ -2,7 +2,9 @@
 	import { type Incident } from '$lib';
 	import { DateTime, Interval, Duration } from 'luxon';
 
+	const millisecondsInMinute = 1000 * 60;
 	export let incidents: Incident[];
+	
 	$: incidentDescriptions = incidents
 		.slice()
 		.sort((a, b) => b.startTime.toMillis() - a.startTime.toMillis())
@@ -15,11 +17,8 @@
 	};
 
 	function getIncidentHistoryItem(incident: Incident): OutageHistoryItem {
-		// luxon's toHuman doesn't do rounding nicely. see the comments on this
-		// popular issue: https://github.com/moment/luxon/issues/1134. here, we
-		// just clear out the milliseconds and seconds. this is a hack.
-		const millisecondsInMinute = 1000 * 60;
 		const startTime = incident.startTime.toLocaleString({
+			weekday: 'short',
 			month: 'long',
 			day: 'numeric',
 			year: 'numeric',
@@ -27,6 +26,9 @@
 			minute: '2-digit',
 			timeZoneName: 'short'
 		});
+		// luxon's toHuman doesn't do rounding nicely. see the comments on this
+		// popular issue: https://github.com/moment/luxon/issues/1134. here, we
+		// just clear out the milliseconds and seconds. this is a hack.
 		const roundedDurationMillis = Math.max(
 			Math.floor(
 				Interval.fromDateTimes(incident.startTime, incident.endTime ?? DateTime.now())
@@ -51,7 +53,7 @@
 		{#each incidentDescriptions as incident}
 			<li>
 				{#if incident.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
-				{incident.startTime} - {incident.duration}
+				<time>{incident.startTime}</time> - {incident.duration}
 			</li>
 		{/each}
 	</ol>

@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { type Incident } from '$lib';
 	import { screenSizeStore } from '$lib/viewportWidthStore';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, tick } from 'svelte';
 	import { DateTime, Interval } from 'luxon';
 	import { PUBLIC_START_OF_SERVICE_DATE } from '$env/static/public';
+	import { computePosition, shift, flip, offset, arrow } from '@floating-ui/dom';
 
 	let viewportWidthVar: string;
 	export let incidents: Incident[];
 	const startOfService = DateTime.fromISO(PUBLIC_START_OF_SERVICE_DATE).startOf('day');
 	let tooltipDay: Day | null = null;
-	let tooltipX = 0;
-	let tooltipY = 0;
+	let tooltipElement: HTMLDivElement;
+	let tooltipArrowElement: HTMLDivElement;
 
 	$: dayCount = viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
 	$: days = makeDays(dayCount, incidents);
@@ -70,18 +71,55 @@
 		return (uptimeDuration.toMillis() / totalDuration.toMillis()) * 100;
 	}
 
-	function showTooltip(event: MouseEvent, day: Day) {
+	async function showTooltip(event: MouseEvent, day: Day) {
 		tooltipDay = day;
 		const target = event.target as SVGElement;
-		const targetRect = target.getBoundingClientRect();
-		const parentRect = target.parentElement?.getBoundingClientRect() as DOMRect;
+		await tick();
 
-		tooltipX = targetRect.x - (parentRect?.x as number);
-		tooltipY = targetRect.height;
+		let {
+			x: left,
+			y: top,
+			placement,
+			middlewareData
+		} = await computePosition(target, tooltipElement as HTMLElement, {
+			placement: 'bottom',
+			middleware: [
+				offset(6),
+				flip(),
+				shift({ padding: 5 }),
+				arrow({ element: tooltipArrowElement })
+			]
+		});
+
+		Object.assign(tooltipElement.style, {
+			left: `${left}px`,
+			top: `${top}px`,
+			opacity: '1'
+		});
+
+		const staticSide = {
+			top: 'bottom',
+			right: 'left',
+			bottom: 'top',
+			left: 'right'
+		}[placement.split('-')[0]] as string;
+		console.log(staticSide);
+
+		if (middlewareData.arrow) {
+			const { x: arrowX, y: arrowY } = middlewareData.arrow;
+			Object.assign(tooltipArrowElement.style, {
+				left: arrowX != null ? `${arrowX}px` : '',
+				top: arrowY != null ? `${arrowY}px` : '',
+				[staticSide]: '-4px'
+			});
+		}
 	}
 
 	function hideTooltip() {
 		tooltipDay = null;
+		Object.assign(tooltipElement.style, {
+			opacity: '0'
+		});
 	}
 
 	const unsubscribe = screenSizeStore.subscribe((value) => {
@@ -102,6 +140,7 @@
 			height="3rem"
 			viewBox={`0 0 ${days.length * 5 - 2} 34`}
 			on:mouseleave={hideTooltip}
+			role="list"
 		>
 			{#each days as day, index}
 				<rect
@@ -114,24 +153,29 @@
 					height="34"
 					y="0"
 					x={index * 5}
-					on:mouseenter={(event) => showTooltip(event, day)}
-					on:click={(event) => showTooltip(event, day)}
+					on:mouseenter={async (event) => {
+						await showTooltip(event, day);
+					}}
+					on:click={async (event) => {
+						await showTooltip(event, day);
+					}}
+					role="presentation"
 				/>
 			{/each}
 		</svg>
 
-		{#if tooltipDay}
-			<div
-				class="tooltip"
-				style="top: {tooltipY}px; left: {tooltipX}px;"
-			>
-				<p>{tooltipDay.start.toLocaleString({
-					month: 'long',
-					day: 'numeric',
-					year: 'numeric',
-				})}</p>
-			</div>
-		{/if}
+		<div id="tooltip" bind:this={tooltipElement} role="tooltip">
+			{#if tooltipDay}
+				<p>
+					{tooltipDay?.start.toLocaleString({
+						month: 'long',
+						day: 'numeric',
+						year: 'numeric'
+					})}
+				</p>
+			{/if}
+			<div id="arrow" bind:this={tooltipArrowElement}></div>
+		</div>
 	</div>
 
 	<div class="legend">
@@ -144,16 +188,30 @@
 </div>
 
 <style>
-	.tooltip {
+	#arrow {
+		position: absolute;
+		background: #222;
+		width: 8px;
+		height: 8px;
+		transform: rotate(45deg);
+		background-color: var(--text-color);
+	}
+
+	#tooltip {
 		position: absolute;
 		background-color: var(--text-color);
 		color: var(--background-color);
-		border: 1px solid black;
 		z-index: 3;
+		border-radius: 0.5rem;
+		padding: 0.5rem 1.25rem;
+		opacity: 0;
+	}
+
+	#tooltip p {
+		margin: 0;
 	}
 
 	.viz {
-		position: relative;
 		z-index: 2;
 	}
 
