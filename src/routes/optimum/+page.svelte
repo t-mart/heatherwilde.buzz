@@ -67,7 +67,7 @@
 </p>
 
 <p>
-	These visualizations measure an external host's ability to communicate with
+	These graphs measure an external host's ability to communicate with
 	my home network over time.
 </p>
 
