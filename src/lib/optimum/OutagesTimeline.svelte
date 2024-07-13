@@ -137,6 +137,8 @@
 	});
 </script>
 
+<!-- TODO: sometimes, multiple clicking on a day with outages causes strange tooltip repositioning. fix. -->
+
 <OptimumGraphPanel title="Outages">
 	<svelte:fragment slot="main">
 		<svg
