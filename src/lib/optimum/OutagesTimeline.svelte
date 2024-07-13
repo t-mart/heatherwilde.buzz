@@ -67,13 +67,14 @@
 	async function showTooltip(event: MouseEvent, day: Day) {
 		tooltipDay = day;
 		const target = event.target as SVGElement;
+		const dayRect = target.parentElement!.querySelector('.day') as SVGRectElement;
 
 		let {
 			x: left,
 			y: top,
 			placement,
 			middlewareData
-		} = await computePosition(target, tooltipElement as HTMLElement, {
+		} = await computePosition(dayRect, tooltipElement as HTMLElement, {
 			placement: 'bottom',
 			middleware: [
 				offset(6),
@@ -140,28 +141,39 @@
 			preserveAspectRatio="none"
 			height="3rem"
 			viewBox={`0 0 ${days.length * 5 - 2} 34`}
-			on:mouseleave={hideTooltip}
 			role="list"
+			on:mouseleave={hideTooltip}
 		>
 			{#each days as day, index}
-				<rect
-					class={day.in_service
-						? day.outages.length > 0
-							? 'hasOutage'
-							: 'noOutage'
-						: 'outOfService'}
-					width="3"
-					height="34"
-					y="0"
-					x={index * 5}
-					on:mouseenter={async (event) => {
-						await showTooltip(event, day);
-					}}
-					on:click={async (event) => {
-						await showTooltip(event, day);
-					}}
-					role="presentation"
-				/>
+				<g>
+					<rect
+						class:day={true}
+						class={day.in_service
+							? day.outages.length > 0
+								? 'hasOutage'
+								: 'noOutage'
+							: 'outOfService'}
+						width="3"
+						height="34"
+						y="0"
+						x={index * 5}
+					/>
+					<rect
+						width="5"
+						height="34"
+						y="0"
+						x={index * 5}
+						fill="transparent"
+						on:mouseenter={async (event) => {
+							await showTooltip(event, day);
+						}}
+						on:click={async (event) => {
+							await showTooltip(event, day);
+						}}
+						on:blur={() => {}}
+						role="presentation"
+					/>
+				</g>
 			{/each}
 		</svg>
 
@@ -205,7 +217,7 @@
 		fill: var(--down-color);
 	}
 
-	.hasOutage:hover {
+	.hasOutage.hovered {
 		fill: var(--down-hover-color);
 	}
 
@@ -213,7 +225,7 @@
 		fill: var(--up-color);
 	}
 
-	.noOutage:hover {
+	.noOutage.hovered {
 		fill: var(--up-hover-color);
 	}
 
@@ -221,7 +233,7 @@
 		fill: var(--non-data-color);
 	}
 
-	.outOfService:hover {
+	.outOfService.hovered {
 		fill: var(--non-data-hover-color);
 	}
 
