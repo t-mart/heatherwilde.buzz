@@ -12,7 +12,7 @@ const formatMillisecond = d3.timeFormat('.%L'),
 	formatMonth = d3.timeFormat('%B'),
 	formatYear = d3.timeFormat('%Y');
 
-export function multiFormat(date: Date) {
+export default function (date: Date) {
 	if (d3.timeSecond(date) < date) {
 		return formatMillisecond(date);
 	}

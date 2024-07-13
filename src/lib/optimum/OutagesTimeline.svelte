@@ -2,20 +2,20 @@
 	import { type Outage, type Day } from '$lib';
 	import OptimumOutagesTimelineTooltip from './OutagesTimelineTooltip.svelte';
 	import OptimumGraphPanel from './GraphPanel.svelte';
-	import { screenSizeStore } from '$lib/viewportWidthStore';
-	import { onDestroy } from 'svelte';
+	import onResize from '$lib/onResize';
+	import { onDestroy, onMount } from 'svelte';
 	import { DateTime, Interval } from 'luxon';
 	import { PUBLIC_START_OF_SERVICE_DATE } from '$env/static/public';
 	import { computePosition, shift, flip, offset, arrow } from '@floating-ui/dom';
 
-	let viewportWidthVar: string;
 	export let outages: Outage[];
 	const startOfService = DateTime.fromISO(PUBLIC_START_OF_SERVICE_DATE).startOf('day');
 	let tooltipDay: Day | null = null;
 	let tooltipElement: HTMLDivElement;
 	let tooltipArrowElement: HTMLDivElement;
+	let dayCount: number = 90;
+	let destroyResizeObserverFn: () => void;
 
-	$: dayCount = viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
 	$: days = makeDays(dayCount, outages);
 	$: uptimePercentage = calculateUptime(dayCount, outages);
 
@@ -113,17 +113,29 @@
 		});
 	}
 
-	const unsubscribe = screenSizeStore.subscribe((value) => {
-		viewportWidthVar = value;
+	function onResizeUpdate() {
+		// update the viewportWidthVar when the viewport width changes
+		const viewportWidthVar = getComputedStyle(document.documentElement)
+			.getPropertyValue('--viewport-width-name')
+			.trim();
+		dayCount = viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
+
+		// resize has likely made the tooltip position invalid
+		hideTooltip();
+	}
+
+	onMount(() => {
+		onResizeUpdate();
+		destroyResizeObserverFn = onResize(document.documentElement, onResizeUpdate).destroy;
 	});
 
 	onDestroy(() => {
-		unsubscribe();
+		destroyResizeObserverFn();
 	});
 </script>
 
 <OptimumGraphPanel title="Outages">
-	<slot>
+	<svelte:fragment slot="main">
 		<svg
 			preserveAspectRatio="none"
 			height="3rem"
@@ -166,8 +178,8 @@
 			<span>{parseFloat(uptimePercentage.toFixed(2)).toString()}% uptime</span>
 			<div class="spacer" />
 			<span>Today</span>
-		</div></slot
-	>
+		</div>
+	</svelte:fragment>
 </OptimumGraphPanel>
 
 <style>

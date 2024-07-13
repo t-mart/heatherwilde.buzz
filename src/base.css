@@ -19,9 +19,10 @@
 
 	Instead, use the classes defined in fonts.scss on elements.
 
-	These are here for making this base sheet work. If you use them, you have
-	to make sure that you're also setting the font-weight and font-style correctly,
-	or else the browser may not find what you're trying to use.
+	These are here for making this base sheet apply styles to some element
+	selectors by default (h1, h2, ...). If you use them, you have to make sure
+	that you're also setting the font-weight and font-style correctly, or else
+	the browser may not find what you're trying to use.
 	*/
 	--display-black-font-family: 'AT-NameSans-Display-Black', sans-serif;
 	--display-black-italic-font-family: 'AT-NameSans-Display-Black-Italic', sans-serif;
@@ -141,7 +142,7 @@ em {
 	font-style: italic;
 }
 
-a {
+a, .link-button {
 	color: var(--up-color);
 	text-decoration: underline;
 }
@@ -150,11 +151,11 @@ a:visited {
 	color: var(--up-color);
 }
 
-a:hover {
+a:hover, .link-button:hover {
 	color: var(--up-hover-color);
 }
 
-a:focus {
+a:focus, .link-button:focus {
 	outline: 0.15em dashed var(--up-color);
 	outline-offset: 0.1em;
 	border-radius: 0.25em;

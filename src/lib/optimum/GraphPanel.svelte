@@ -3,8 +3,11 @@
 </script>
 
 <div class="container">
-	<h4>{title}</h4>
-	<slot></slot>
+	<div class="header">
+		<h4>{title}</h4>
+		<slot name="header-right"></slot>
+	</div>
+	<slot name="main"></slot>
 </div>
 
 <style>
@@ -17,5 +20,11 @@
 
 	h4 {
 		margin: 0 0 0.5rem 0;
+	}
+
+	.header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
 	}
 </style>
