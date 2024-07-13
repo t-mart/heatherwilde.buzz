@@ -68,8 +68,6 @@
 		tooltipDay = day;
 		const target = event.target as SVGElement;
 		const dayRect = target.parentElement!.querySelector('.day') as SVGRectElement;
-		document.querySelectorAll('.day').forEach((el) => el.classList.remove('hovered'));
-		dayRect.classList.add('hovered');
 
 		let {
 			x: left,
@@ -149,7 +147,8 @@
 			on:mouseleave={hideTooltip}
 		>
 			{#each days as day, index}
-				<g>
+				<g
+				class="day-cursor-group">
 					<rect
 						class:day={true}
 						class={day.in_service
@@ -163,18 +162,18 @@
 						x={index * 5}
 					/>
 					<rect
+					class="day-cursor"
 						width="5"
 						height="34"
 						y="0"
 						x={index * 5}
 						fill="transparent"
-						on:mouseenter={async (event) => {
+						on:pointerenter={async (event) => {
 							await showTooltip(event, day);
 						}}
-						on:click={async (event) => {
+						on:pointermove={async (event) => {
 							await showTooltip(event, day);
 						}}
-						on:blur={() => {}}
 						role="presentation"
 					/>
 				</g>
@@ -221,7 +220,7 @@
 		fill: var(--down-color);
 	}
 
-	:global(.hasOutage.hovered) {
+	.day-cursor-group:has(.day-cursor:hover) .hasOutage {
 		fill: var(--down-hover-color);
 	}
 
@@ -229,7 +228,7 @@
 		fill: var(--up-color);
 	}
 
-	:global(.noOutage.hovered) {
+	.day-cursor-group:has(.day-cursor:hover) .noOutage {
 		fill: var(--up-hover-color);
 	}
 
@@ -237,7 +236,7 @@
 		fill: var(--non-data-color);
 	}
 
-	:global(.outOfService.hovered) {
+	.day-cursor-group:has(.day-cursor:hover) .outOfService {
 		fill: var(--non-data-hover-color);
 	}
 

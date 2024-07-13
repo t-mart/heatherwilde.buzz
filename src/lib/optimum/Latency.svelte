@@ -93,7 +93,12 @@
 		cursorProbe = null;
 	}
 
-	function handleCursorMove(event: MouseEvent) {
+	function handleCursorMove(
+		event: PointerEvent & {
+			currentTarget: EventTarget & SVGRectElement;
+		}
+	) {
+		event.currentTarget.setPointerCapture(event.pointerId);
 		let pointerDate = plotData.x.invert(d3.pointer(event)[0]);
 		let nearestIdx = cursorBisect.center(plotData.probes, pointerDate);
 		cursorProbe = plotData.probes[nearestIdx];
@@ -174,13 +179,11 @@
 			y={0}
 			width={width - marginLeft - marginRight}
 			{height}
-			on:mouseout={() => {
+			on:pointermove={handleCursorMove}
+			on:pointerenter={handleCursorMove}
+			on:pointerout={() => {
 				cursorProbe = null;
 			}}
-			on:mousemove={handleCursorMove}
-			on:click={handleCursorMove}
-			on:focus={() => {}}
-			on:blur={() => {}}
 			role="presentation"
 		/>
 	</svg>
