@@ -68,6 +68,8 @@
 		tooltipDay = day;
 		const target = event.target as SVGElement;
 		const dayRect = target.parentElement!.querySelector('.day') as SVGRectElement;
+		document.querySelectorAll('.day').forEach((el) => el.classList.remove('hovered'));
+		dayRect.classList.add('hovered');
 
 		let {
 			x: left,
@@ -217,7 +219,7 @@
 		fill: var(--down-color);
 	}
 
-	.hasOutage.hovered {
+	:global(.hasOutage.hovered) {
 		fill: var(--down-hover-color);
 	}
 
@@ -225,7 +227,7 @@
 		fill: var(--up-color);
 	}
 
-	.noOutage.hovered {
+	:global(.noOutage.hovered) {
 		fill: var(--up-hover-color);
 	}
 
@@ -233,7 +235,7 @@
 		fill: var(--non-data-color);
 	}
 
-	.outOfService.hovered {
+	:global(.outOfService.hovered) {
 		fill: var(--non-data-hover-color);
 	}
 
