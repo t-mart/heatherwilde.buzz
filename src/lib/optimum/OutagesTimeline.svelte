@@ -1,49 +1,87 @@
 <script lang="ts">
-	import { type Outage, type Day } from '$lib';
-	import OptimumOutagesTimelineTooltip from './OutagesTimelineTooltip.svelte';
-	import OptimumGraphPanel from './GraphPanel.svelte';
-	import onResize from '$lib/onResize';
+	import { pointer } from 'd3';
 	import { onDestroy, onMount } from 'svelte';
+	import { derived } from 'svelte/store';
 	import { DateTime, Interval } from 'luxon';
+
+	import { type Outage, type Day } from '$lib';
+	import { createResizeStore } from '$lib/resizeStore';
+	import { subscribeTooltipOwner } from '$lib/tooltipStore';
+	import Tooltip from '$lib/Tooltip.svelte';
+	import { setupTooltip } from '$lib/tooltip';
 	import { PUBLIC_START_OF_SERVICE_DATE } from '$env/static/public';
-	import { computePosition, shift, flip, offset, arrow } from '@floating-ui/dom';
+
+	import OptimumGraphPanel from './GraphPanel.svelte';
+	import OptimumOutagesTimelineTooltip from './OutagesTimelineTooltip.svelte';
 
 	export let outages: Outage[];
+
 	const startOfService = DateTime.fromISO(PUBLIC_START_OF_SERVICE_DATE).startOf('day');
+
 	let tooltipDay: Day | null = null;
-	let tooltipElement: HTMLDivElement;
-	let tooltipArrowElement: HTMLDivElement;
+	const { tooltipReferenceAction, tooltipFloatingAction, tooltipArrowStore } = setupTooltip();
+	const takeTooltip = subscribeTooltipOwner('outages', () => {
+		tooltipDay = null;
+	});
+
 	let dayCount: number = 90;
-	let destroyResizeObserverFn: () => void;
+	const dayBarWidth = 3;
+	const dayGapWidth = 2;
+	const dayHeight = 34;
+	const dayTotalWidth = dayBarWidth + dayGapWidth;
+	$: svgWidth = dayCount * dayTotalWidth - dayGapWidth; // remove the last gap
+	$: days = makeDays(outages, dayCount);
+	$: uptimePercentage = calculateUptime(outages, dayCount);
+	$: clearTooltipOnOutageChange(outages);
 
-	$: days = makeDays(dayCount, outages);
-	$: uptimePercentage = calculateUptime(dayCount, outages);
+	let unsubscribeDayCount: () => void;
 
-	function makeDays(dayCount: number, outages: Outage[]): Day[] {
+	/** dummy method to clear the tooltip because outage update will likely make it invalid */
+	function clearTooltipOnOutageChange(_: any) {
+		tooltipDay = null;
+	}
+
+	function makeDays(outages: Outage[], dayCount: number): Day[] {
 		// sort outages by property startTime, from earliest to latest
 		outages = outages.sort((a, b) => a.startTime.toMillis() - b.startTime.toMillis());
 
 		const days: Day[] = [];
-		const serviceInterval = Interval.fromDateTimes(startOfService, DateTime.now());
-		const now = DateTime.now().startOf('day');
-		let curDate = now.minus({ days: dayCount - 1 });
+		const now = DateTime.now();
+		const serviceInterval = Interval.fromDateTimes(startOfService, now);
+		let curDate = now.startOf('day').minus({ days: dayCount - 1 });
+		let curOutageIndex = 0;
 
 		while (curDate <= now) {
-			const curInterval = Interval.fromDateTimes(curDate, curDate.plus({ days: 1 }));
-			const in_service = serviceInterval.contains(curDate);
-			// this is n^2, but it's fine for now
-			const outagesForDay = outages.filter((outage) => {
-				const outageInterval = Interval.fromDateTimes(outage.startTime, outage.endTime ?? now);
-				return curInterval.overlaps(outageInterval);
-			});
-			days.push({ start: curDate, in_service, outages: outagesForDay });
+			const curDay = {
+				start: curDate,
+				in_service: serviceInterval.contains(curDate),
+				outages: []
+			} as Day;
+
+			const curDayInterval = Interval.fromDateTimes(curDate, curDate.plus({ days: 1 }));
+
+			while (curOutageIndex < outages.length) {
+				const curOutage = outages[curOutageIndex];
+				const curOutageInterval = Interval.fromDateTimes(
+					curOutage.startTime,
+					curOutage.endTime ?? now
+				);
+
+				if (curOutageInterval.overlaps(curDayInterval)) {
+					curDay.outages.push(curOutage);
+					curOutageIndex++;
+				} else {
+					break;
+				}
+			}
+			days.push(curDay);
 			curDate = curDate.plus({ days: 1 });
 		}
 
 		return days;
 	}
 
-	function calculateUptime(dayCount: number, outages: Outage[]): number {
+	function calculateUptime(outages: Outage[], dayCount: number): number {
 		const start = DateTime.fromMillis(
 			Math.max(startOfService.toMillis(), DateTime.now().minus({ days: dayCount }).toMillis())
 		);
@@ -64,128 +102,90 @@
 		return (uptimeDuration.toMillis() / totalDuration.toMillis()) * 100;
 	}
 
-	async function showTooltip(event: MouseEvent, day: Day) {
-		tooltipDay = day;
-		const target = event.target as SVGElement;
-		const dayRect = target.parentElement!.querySelector('.day') as SVGRectElement;
+	function dayId(index: number) {
+		return `day-${index}`;
+	}
 
-		let {
-			x: left,
-			y: top,
-			placement,
-			middlewareData
-		} = await computePosition(dayRect, tooltipElement as HTMLElement, {
-			placement: 'bottom',
-			middleware: [
-				offset(6),
-				flip(),
-				shift({ padding: 5 }),
-				arrow({ element: tooltipArrowElement })
-			]
-		});
+	function handleGraphPointerEvent(
+		event: PointerEvent & {
+			currentTarget: EventTarget & SVGElement;
+		}
+	) {
+		/*
+		- pointerenter: find the day, show the tooltip
+		- pointermove: find the day, show the tooltip
+		- pointerout: if touch, do nothing. if mouse, hide the tooltip
+		*/
+		switch (event.type) {
+			case 'pointerenter':
+			case 'pointermove':
+				const x = pointer(event)[0];
+				const dayIndex = Math.floor(x / dayTotalWidth);
+				if (dayIndex < 0 || dayIndex >= days.length) {
+					tooltipDay = null;
+				}
+				takeTooltip();
+				tooltipReferenceAction(
+					event.currentTarget.querySelector(`#${dayId(dayIndex)}`) as SVGElement
+				);
+				tooltipDay = days[dayIndex];
+				break;
 
-		Object.assign(tooltipElement.style, {
-			left: `${left}px`,
-			top: `${top}px`,
-			opacity: '1'
-		});
-
-		const staticSide = {
-			top: 'bottom',
-			right: 'left',
-			bottom: 'top',
-			left: 'right'
-		}[placement.split('-')[0]] as string;
-
-		if (middlewareData.arrow) {
-			const { x: arrowX, y: arrowY } = middlewareData.arrow;
-			Object.assign(tooltipArrowElement.style, {
-				left: arrowX != null ? `${arrowX}px` : '',
-				top: arrowY != null ? `${arrowY}px` : '',
-				[staticSide]: '-4px'
-			});
+			case 'pointerout':
+				if (event.pointerType !== 'touch') {
+					tooltipDay = null;
+				}
+				break;
 		}
 	}
 
-	function hideTooltip() {
-		tooltipDay = null;
-		Object.assign(tooltipElement.style, {
-			opacity: '0'
-		});
-	}
-
-	function onResizeUpdate() {
-		// update the viewportWidthVar when the viewport width changes
-		const viewportWidthVar = getComputedStyle(document.documentElement)
-			.getPropertyValue('--viewport-width-name')
-			.trim();
-		dayCount = viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
-
-		// resize has likely made the tooltip position invalid
-		hideTooltip();
-	}
-
 	onMount(() => {
-		onResizeUpdate();
-		destroyResizeObserverFn = onResize(document.documentElement, onResizeUpdate).destroy;
+		const resizeStore = createResizeStore(document.documentElement);
+
+		const dayCountStore = derived(resizeStore, () => {
+			const viewportWidthVar = getComputedStyle(document.documentElement)
+				.getPropertyValue('--viewport-width-name')
+				.trim();
+			return viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
+		});
+		unsubscribeDayCount = dayCountStore.subscribe((value) => {
+			dayCount = value;
+		});
 	});
 
 	onDestroy(() => {
-		destroyResizeObserverFn();
+		unsubscribeDayCount();
 	});
 </script>
-
-<!-- TODO: sometimes, multiple clicking on a day with outages causes strange tooltip repositioning. fix. -->
 
 <OptimumGraphPanel title="Outages">
 	<svelte:fragment slot="main">
 		<svg
 			preserveAspectRatio="none"
 			height="3rem"
-			viewBox={`0 0 ${days.length * 5 - 2} 34`}
+			viewBox={`0 0 ${svgWidth} ${dayHeight}`}
 			role="list"
-			on:mouseleave={hideTooltip}
+			on:pointerenter={handleGraphPointerEvent}
+			on:pointermove={handleGraphPointerEvent}
+			on:pointerout={handleGraphPointerEvent}
 		>
 			{#each days as day, index}
-				<g
-				class="day-cursor-group">
-					<rect
-						class:day={true}
-						class={day.in_service
-							? day.outages.length > 0
-								? 'hasOutage'
-								: 'noOutage'
-							: 'outOfService'}
-						width="3"
-						height="34"
-						y="0"
-						x={index * 5}
-					/>
-					<rect
-					class="day-cursor"
-						width="5"
-						height="34"
-						y="0"
-						x={index * 5}
-						fill="transparent"
-						on:pointerenter={async (event) => {
-							await showTooltip(event, day);
-						}}
-						on:pointermove={async (event) => {
-							await showTooltip(event, day);
-						}}
-						role="presentation"
-					/>
-				</g>
+				<rect
+					id={dayId(index)}
+					class:day={true}
+					class:selected={day === tooltipDay}
+					class={day.in_service
+						? day.outages.length > 0
+							? 'hasOutage'
+							: 'noOutage'
+						: 'outOfService'}
+					width={dayBarWidth}
+					height={dayHeight}
+					y="0"
+					x={index * dayTotalWidth}
+				/>
 			{/each}
 		</svg>
-
-		<div id="tooltip" bind:this={tooltipElement} role="tooltip">
-			{#if tooltipDay}
-				<OptimumOutagesTimelineTooltip day={tooltipDay} />
-			{/if}
-			<div id="arrow" bind:this={tooltipArrowElement}></div>
-		</div>
 
 		<div class="legend">
 			<span>{dayCount} days ago</span>
@@ -194,33 +194,21 @@
 			<div class="spacer" />
 			<span>Today</span>
 		</div>
+
+		{#if tooltipDay}
+			<Tooltip {tooltipFloatingAction} {tooltipArrowStore} closeFn={() => (tooltipDay = null)}>
+				<OptimumOutagesTimelineTooltip day={tooltipDay} />
+			</Tooltip>
+		{/if}
 	</svelte:fragment>
 </OptimumGraphPanel>
 
 <style>
-	#arrow {
-		position: absolute;
-		background: #222;
-		width: 8px;
-		height: 8px;
-		transform: rotate(45deg);
-		background-color: var(--text-color);
-	}
-
-	#tooltip {
-		position: absolute;
-		background-color: var(--text-color);
-		color: var(--background-color);
-		z-index: 3;
-		border-radius: 0.5rem;
-		opacity: 0;
-	}
-
 	.hasOutage {
 		fill: var(--down-color);
 	}
 
-	.day-cursor-group:has(.day-cursor:hover) .hasOutage {
+	.hasOutage.selected {
 		fill: var(--down-hover-color);
 	}
 
@@ -228,7 +216,7 @@
 		fill: var(--up-color);
 	}
 
-	.day-cursor-group:has(.day-cursor:hover) .noOutage {
+	.noOutage.selected {
 		fill: var(--up-hover-color);
 	}
 
@@ -236,12 +224,13 @@
 		fill: var(--non-data-color);
 	}
 
-	.day-cursor-group:has(.day-cursor:hover) .outOfService {
+	.outOfService.selected {
 		fill: var(--non-data-hover-color);
 	}
 
 	svg {
 		width: 100%;
+		touch-action: none;
 	}
 
 	.legend {

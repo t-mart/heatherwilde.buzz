@@ -6,6 +6,8 @@
 	import OutagesHistory from '$lib/optimum/OutagesHistory.svelte';
 	import Latency from '$lib/optimum/Latency.svelte';
 	import { Duration, DateTime } from 'luxon';
+	import { offset, flip, shift } from 'svelte-floating-ui/dom';
+	import { createFloatingActions } from 'svelte-floating-ui';
 
 	let outages: Outage[] | null = null;
 	let probes: Probe[] | null = null;
@@ -73,7 +75,7 @@
 		await fetchProbes();
 	}
 
-	async function handleTimeframeChange(event: CustomEvent<Timeframe>) {
+	async function handleProbeTimeframeChange(event: CustomEvent<Timeframe>) {
 		// fail fast if the timeframe hasn't changed
 		if (event.detail === currentTimeframe) return;
 
@@ -95,16 +97,20 @@
 	<title>Heatherwilde Optimum Internet Monitor - heatherwilde.buzz</title>
 </svelte:head>
 
-<h1 class="heading">Heatherwilde Optimum Internet Monitor</h1>
+<h1>Heatherwilde Optimum Internet Monitor</h1>
 
-<div class="internet">
+<div>
 	{#if error}
 		<p>Error: {error}</p>
 	{:else if outages && probes}
 		{#if outages.length > 0 && probes.length > 0}
 			<CurrentStatus {outages} />
 			<OutagesTimeline {outages} />
-			<Latency {probes} {currentTimeframe} on:timeframeChange={handleTimeframeChange} />
+			<Latency
+				{probes}
+				{currentTimeframe}
+				on:timeframeChange={handleProbeTimeframeChange}
+			/>
 			<OutagesHistory {outages} />
 		{:else}
 			<p>No data</p>
@@ -114,7 +120,7 @@
 	{/if}
 </div>
 
-<h3 class="heading">What is this?</h3>
+<h3>What is this?</h3>
 
 <p>
 	Optimum provides my home Internet service. There's been a lot of downtime lately and, as any

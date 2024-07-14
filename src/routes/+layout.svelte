@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Hamburger from '$lib/Hamburger.svelte';
 	let navCollapsed = true;
 </script>
 
@@ -12,15 +13,7 @@
 						on:click={() => (navCollapsed = !navCollapsed)}
 						aria-label="Toggle Navigation"
 					>
-						<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="100%" viewBox="0 0 24 24"
-							><path
-								fill="none"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M5 17h14M5 12h14M5 7h14"
-							/></svg
-						>
+						<Hamburger open={!navCollapsed} />
 					</button>
 					<a href="/">
 						<svg
@@ -99,7 +92,6 @@
 		gap: 1rem;
 	}
 
-
 	@media (min-width: 80ch) {
 		nav ol {
 			flex-direction: row;
@@ -130,15 +122,6 @@
 
 	.hamburger {
 		padding: 0;
-	}
-
-	.hamburger svg {
-		stroke: var(--text-color);
-		border: 3px solid var(--text-color);
-		border-radius: 0.5rem;
-	}
-
-	.hamburger:hover svg {
-		stroke: var(--up-color);
+		width: 3rem;
 	}
 </style>

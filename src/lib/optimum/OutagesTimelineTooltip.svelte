@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { DateTime, Interval } from 'luxon';
 	import { type Day } from '$lib';
+	import { formatDateAndTime, formatTime, formatDate } from '$lib/format';
 	export let day: Day;
+	export let maxOutages = 3;
+	$: exceedsMaxOutages = day.outages.length > maxOutages;
 
 	function formatOutageTooltipDateTime(
 		dateTime: DateTime | null,
@@ -16,35 +19,16 @@
 		);
 
 		if (dayInterval.contains(dateTime)) {
-			// just time
-			return dateTime.toLocaleString({
-				hour: 'numeric',
-				minute: '2-digit',
-				second: '2-digit'
-			});
+			return formatTime(dateTime);
 		} else {
-			// date and time
-			return dateTime.toLocaleString({
-				weekday: 'short',
-				month: 'long',
-				day: 'numeric',
-				year: 'numeric',
-				hour: 'numeric',
-				minute: '2-digit',
-				timeZoneName: 'short'
-			});
+			return formatDateAndTime(dateTime);
 		}
 	}
 </script>
 
 <div class="container">
 	<h5>
-		{day?.start.toLocaleString({
-			weekday: 'short',
-			month: 'long',
-			day: 'numeric',
-			year: 'numeric'
-		})}
+		{formatDate(day.start)}
 	</h5>
 
 	{#if !day.in_service}
@@ -52,7 +36,7 @@
 	{:else if day.outages.length > 0}
 		<p class="heading">Outages:</p>
 		<ul>
-			{#each day.outages as outage}
+			{#each day.outages.slice(0, maxOutages) as outage}
 				<li>
 					{formatOutageTooltipDateTime(outage.startTime, day.start)} - {formatOutageTooltipDateTime(
 						outage.endTime,
@@ -60,6 +44,9 @@
 					)}
 				</li>
 			{/each}
+			{#if exceedsMaxOutages}
+				<li>...</li>
+			{/if}
 		</ul>
 	{:else}
 		<p>No outages</p>
@@ -67,16 +54,13 @@
 </div>
 
 <style>
-	.container {
-		margin: 1rem 1rem;
-	}
-
 	h5,
 	.heading {
 		margin-bottom: 0.5rem;
 	}
 
 	ul,
+	li,
 	p:last-child {
 		margin-bottom: 0;
 	}

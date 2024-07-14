@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { type Outage } from '$lib';
+	import { formatDateAndTime } from '$lib/format';
 	import { DateTime, Interval, Duration } from 'luxon';
 
 	const millisecondsInMinute = 1000 * 60;
@@ -17,15 +18,7 @@
 	};
 
 	function getOutageHistoryItem(outage: Outage): OutageHistoryItem {
-		const startTime = outage.startTime.toLocaleString({
-			weekday: 'short',
-			month: 'long',
-			day: 'numeric',
-			year: 'numeric',
-			hour: 'numeric',
-			minute: '2-digit',
-			timeZoneName: 'short'
-		});
+		const startTime = formatDateAndTime(outage.startTime, true);
 		// luxon's toHuman doesn't do rounding nicely. see the comments on this
 		// popular issue: https://github.com/moment/luxon/issues/1134. here, we
 		// just clear out the milliseconds and seconds. this is a hack.
