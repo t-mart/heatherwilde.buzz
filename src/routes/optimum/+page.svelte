@@ -13,9 +13,9 @@
 	let probes: Probe[] | null = null;
 	let error: string | null = null;
 	let currentTimeframe = Timeframe.DAY;
-	const fetchIntervalDuration = Duration.fromObject({ minutes: 1 }); // 1 minutes
+	const refetchIntervalDuration = Duration.fromObject({ minutes: 5 });
 	const probesCache = new Map<Timeframe, { accessed: DateTime; probes: Probe[] }>();
-	const probesCacheExpiration = fetchIntervalDuration;
+	const probesCacheExpiration = refetchIntervalDuration;
 
 	async function fetchEndpoint<T>(path: string): Promise<T[]> {
 		const response = await fetch(path);
@@ -87,7 +87,7 @@
 		await fetchAll();
 	});
 
-	const interval = setInterval(fetchAll, fetchIntervalDuration.toMillis());
+	const interval = setInterval(fetchAll, refetchIntervalDuration.toMillis());
 	onDestroy(() => {
 		clearInterval(interval);
 	});
