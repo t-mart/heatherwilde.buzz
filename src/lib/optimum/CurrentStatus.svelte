@@ -38,6 +38,7 @@
 		align-items: baseline;
 		column-gap: 1rem;
 		row-gap: 0.5rem;
+		margin-bottom: 2rem;
 	}
 
 	.status {

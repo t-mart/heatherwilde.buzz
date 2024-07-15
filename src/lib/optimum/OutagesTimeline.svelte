@@ -196,7 +196,7 @@
 		</div>
 
 		{#if tooltipDay}
-			<Tooltip {tooltipFloatingAction} {tooltipArrowStore} closeFn={() => (tooltipDay = null)}>
+			<Tooltip {tooltipFloatingAction} {tooltipArrowStore} onCloseFn={() => (tooltipDay = null)}>
 				<OptimumOutagesTimelineTooltip day={tooltipDay} />
 			</Tooltip>
 		{/if}

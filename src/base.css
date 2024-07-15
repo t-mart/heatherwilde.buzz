@@ -68,7 +68,6 @@ body {
 
 ol,
 ul {
-	margin-block-end: 2em;
 	padding-inline-start: 2em;
 }
 
@@ -88,12 +87,12 @@ h5,
 h6,
 ul,
 ol,
-p {
-	margin-bottom: 1em;
+li {
+	margin-block-end: 0.5em;
 }
 
-li {
-	margin-bottom: 0.5em;
+p {
+	margin-block-end: 1em;
 }
 
 h1 {

@@ -4,12 +4,12 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
 	<defs>
-		<line id="line" x1="0" y1="0" x2="14" y2="0" transform="skewX(15)" />
+		<line id="hamburger-line" x1="0" y1="0" x2="14" y2="0" transform="skewX(15)" />
 	</defs>
 	<g class="lines" class:rotated={open}>
-		<use href="#line" class="line" x="5" y="6" />
-		<use href="#line" class="line" x="5" y="12" />
-		<use href="#line" class="line" x="5" y="18" />
+		<use href="#hamburger-line" class="line" x="5" y="6" />
+		<use href="#hamburger-line" class="line" x="5" y="12" />
+		<use href="#hamburger-line" class="line" x="5" y="18" />
 	</g>
 </svg>
 

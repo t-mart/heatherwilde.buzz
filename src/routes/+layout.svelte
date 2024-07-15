@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Hamburger from '$lib/Hamburger.svelte';
+	import HamburgerIcon from '$lib/icons/Hamburger.svelte';
+	import LogoIcon from '$lib/icons/Logo.svelte';
 	let navCollapsed = true;
 </script>
 
@@ -13,23 +14,9 @@
 						on:click={() => (navCollapsed = !navCollapsed)}
 						aria-label="Toggle Navigation"
 					>
-						<Hamburger open={!navCollapsed} />
+						<HamburgerIcon open={!navCollapsed} />
 					</button>
-					<a href="/">
-						<svg
-							class="logo"
-							viewBox="-34.5 0 122 100"
-							xmlns="http://www.w3.org/2000/svg"
-							aria-label="Home Icon"
-						>
-							<path
-								d="M0 0v100-40a10 10 180 1 1 30 0v18a10 10 180 1 0 30 0V38v40a10 10 180 1 0 30 0V38"
-								fill="none"
-								stroke-width="15"
-								transform="skewX(-15)"
-							/>
-						</svg></a
-					>
+					<a href="/" class="logo"><LogoIcon /></a>
 				</li>
 				<li><a href="/">Home</a></li>
 				<li><a href="https://discord.gg/fYS3BTXJdr">Discord</a></li>
@@ -111,12 +98,9 @@
 		margin-bottom: 2rem;
 	}
 
-	svg {
+	:global(.logo) {
 		width: 3rem;
 		min-width: 3rem;
-	}
-
-	svg.logo {
 		stroke: var(--up-color);
 	}
 

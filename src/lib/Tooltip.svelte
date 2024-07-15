@@ -4,10 +4,10 @@
 
 	export let tooltipFloatingAction: ContentAction;
 	export let tooltipArrowStore: Writable<HTMLElement | null>;
-	export let closeFn: () => void;
+	export let onCloseFn: () => void;
 </script>
 
-<div class="tooltip" role="presentation" use:tooltipFloatingAction on:click={closeFn}>
+<div class="tooltip" role="presentation" use:tooltipFloatingAction on:click={onCloseFn}>
 	<slot></slot>
 	<div class="arrow" bind:this={$tooltipArrowStore}></div>
 </div>
@@ -19,6 +19,7 @@
 		color: var(--background-color);
 		z-index: 3;
 		border-radius: 0.5rem;
+		border: 1px solid var(--background-color);
 	}
 
 	.arrow {

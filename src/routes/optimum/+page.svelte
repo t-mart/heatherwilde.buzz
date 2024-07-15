@@ -126,7 +126,7 @@
 	Optimum is Heatherwilde's <a
 	href="https://broadbandmap.fcc.gov/location-summary/fixed?lon=-97.635719&lat=30.45961&vlon=-97.635366&vlat=30.460263">only
 	high-speed Internet service provider</a>. There's been a lot of downtime lately
-	and, as any concerned customer should, I'm keeping track.
+	and I'm keeping track, as any concerned customer should.
 </p>
 
 <p>

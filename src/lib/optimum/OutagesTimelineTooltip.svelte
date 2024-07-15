@@ -55,8 +55,8 @@
 
 <style>
 	h5,
-	.heading {
-		margin-bottom: 0.5rem;
+	p {
+		margin-block-end: 0.5em;
 	}
 
 	ul,

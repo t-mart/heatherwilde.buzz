@@ -103,6 +103,7 @@
 			currentTarget: EventTarget & SVGRectElement;
 		}
 	) {
+		const cursorFromTouch = event.pointerType === 'touch';
 		switch (event.type) {
 			case 'pointerenter':
 			case 'pointermove':
@@ -113,7 +114,7 @@
 				break;
 
 			case 'pointerout':
-				if (event.pointerType !== 'touch') {
+				if (!cursorFromTouch) {
 					cursorProbe = null;
 				}
 				break;
@@ -200,7 +201,7 @@
 		</svg>
 
 		{#if cursorProbe}
-			<Tooltip {tooltipFloatingAction} {tooltipArrowStore} closeFn={() => cursorProbe = null}>
+			<Tooltip {tooltipFloatingAction} {tooltipArrowStore} onCloseFn={() => (cursorProbe = null)}>
 				<LatencyTooltip probe={cursorProbe} />
 			</Tooltip>
 		{/if}
