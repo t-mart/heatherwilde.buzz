@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import type { APIOutage } from '$lib';
-import { DynamoDBClient, QueryCommand, AttributeValue } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, QueryCommand, type AttributeValue } from '@aws-sdk/client-dynamodb';
 import { DateTime, Duration } from 'luxon';
 import { INCIDENT_TABLE_NAME, PROBE_TARGET_HOST_NAME } from '$env/static/private';
 
