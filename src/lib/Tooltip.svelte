@@ -14,7 +14,7 @@
 
 <style>
 	.tooltip {
-        padding: 1rem;
+		padding: 1rem;
 		background-color: var(--text-color);
 		color: var(--background-color);
 		z-index: 3;

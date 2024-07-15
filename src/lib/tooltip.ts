@@ -10,7 +10,7 @@ export function setupTooltip(options = defaultOptions) {
 	const arrowStore = writable<HTMLElement | null>(null);
 	const [referenceAction, floatingAction, updatePositionFn] = createFloatingActions({
 		strategy: 'absolute',
-		placement: 'bottom',
+		placement: 'top',
 		middleware: [offset(6), flip(), shift(), arrow({ element: arrowStore })],
 		autoUpdate: options.autoUpdateOnAnimationFrame && {
 			animationFrame: true

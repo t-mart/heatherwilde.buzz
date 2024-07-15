@@ -5,18 +5,10 @@
 </script>
 
 <div class="container">
-	<h5>
-		{formatDateAndTime(probe.time)}
-	</h5>
-
 	<p>{formatDuration(probe.duration)}</p>
 </div>
 
 <style>
-	h5 {
-		margin-bottom: 0.5rem;
-	}
-
 	p {
 		margin-bottom: 0;
 	}
