@@ -34,7 +34,7 @@
 	{#if !day.in_service}
 		<p>No data for this day</p>
 	{:else if day.outages.length > 0}
-		<p class="heading">Outages:</p>
+		<p>Outages:</p>
 		<ul>
 			{#each day.outages.slice(0, maxOutages) as outage}
 				<li>
