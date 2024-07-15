@@ -31,7 +31,7 @@
     <ul>
         {#each coolThings as coolThing}
             <li>
-                <h2 class="heading"><a href={coolThing.url}>{coolThing.title}</a></h2>
+                <h2><a href={coolThing.url}>{coolThing.title}</a></h2>
                 <p class="desc">{coolThing.desc}</p>
             </li>
         {/each}
@@ -41,8 +41,16 @@
 </div>
 
 <style>
+	.cta {
+		margin-top: 2rem;
+	}
+
+	h2 {
+		margin-bottom: 1rem;
+	}
 
 	li {
+		/* this is actually just for the bullets */
 		font-size: 2rem;
 	}
 
