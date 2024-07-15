@@ -6,8 +6,6 @@
 	import OutagesHistory from '$lib/optimum/OutagesHistory.svelte';
 	import Latency from '$lib/optimum/Latency.svelte';
 	import { Duration, DateTime } from 'luxon';
-	import { offset, flip, shift } from 'svelte-floating-ui/dom';
-	import { createFloatingActions } from 'svelte-floating-ui';
 
 	let outages: Outage[] | null = null;
 	let probes: Probe[] | null = null;
