@@ -50,7 +50,13 @@
 ::before,
 ::after {
 	box-sizing: border-box;
+
+	&::selection {
+		background-color: var(--up-color);
+		color: var(--background-color);
+	}
 }
+
 
 body,
 svg text {
@@ -141,27 +147,29 @@ em {
 	font-style: italic;
 }
 
-a, .link-button {
+a,
+.link-button {
 	color: var(--up-color);
 	text-decoration: underline;
+
+	&:visited {
+		color: var(--up-color);
+	}
+
+	&:hover {
+		color: var(--up-hover-color);
+	}
+
+	&:focus-visible {
+		outline: 0.15em dashed var(--up-color);
+		outline-offset: 0.1em;
+		border-radius: 0.25em;
+	}
 }
 
-a:visited {
-	color: var(--up-color);
-}
-
-a:hover, .link-button:hover {
-	color: var(--up-hover-color);
-}
-
-a:focus, .link-button:focus {
-	outline: 0.15em dashed var(--up-color);
-	outline-offset: 0.1em;
-	border-radius: 0.25em;
-}
-
+/* This is super bare bones. May need to update if we start using more buttons. */
 button {
-	color: var(--text-color);
+	color: var(--up-color);
 	background: none;
 	border: none;
 	cursor: pointer;
