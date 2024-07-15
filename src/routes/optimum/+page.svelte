@@ -123,12 +123,16 @@
 <h3>What is this?</h3>
 
 <p>
-	Optimum provides my home Internet service. There's been a lot of downtime lately and, as any
-	concerned customer should, I'm keeping track.
+	Optimum is Heatherwilde's <a
+	href="https://broadbandmap.fcc.gov/location-summary/fixed?lon=-97.635719&lat=30.45961&vlon=-97.635366&vlat=30.460263">only
+	high-speed Internet service provider</a>. There's been a lot of downtime lately
+	and, as any concerned customer should, I'm keeping track.
 </p>
 
 <p>
-	These graphs measure an external host's ability to communicate with my home network over time.
+	These graphs measure an external host's ability to communicate with my home
+	network over time. In other words, it asks "Is our Internet working well, if
+	at all?".
 </p>
 
 <p>
