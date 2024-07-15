@@ -35,10 +35,7 @@
 	const dispatch = createEventDispatcher();
 
 	let cursorProbe: Probe | null = null;
-	const { tooltipReferenceAction, tooltipFloatingAction, tooltipArrowStore } = setupTooltip({
-		// burn baby burn. we need better responsiveness here for some reason
-		autoUpdateOnAnimationFrame: true
-	});
+	const { tooltipReferenceAction, tooltipFloatingAction, tooltipArrowStore } = setupTooltip();
 	const takeTooltip = subscribeTooltipOwner('latency', () => {
 		cursorProbe = null;
 	});

@@ -2,19 +2,12 @@ import { arrow, createFloatingActions } from 'svelte-floating-ui';
 import { flip, offset, shift, type VirtualElement } from 'svelte-floating-ui/dom';
 import { get, writable, type Writable } from 'svelte/store';
 
-const defaultOptions = {
-	autoUpdateOnAnimationFrame: false
-}
-
-export function setupTooltip(options = defaultOptions) {
+export function setupTooltip() {
 	const arrowStore = writable<HTMLElement | null>(null);
 	const [referenceAction, floatingAction, updatePositionFn] = createFloatingActions({
 		strategy: 'absolute',
 		placement: 'top',
 		middleware: [offset(6), flip(), shift(), arrow({ element: arrowStore })],
-		autoUpdate: options.autoUpdateOnAnimationFrame && {
-			animationFrame: true
-		} || undefined,
 		onComputed({ placement, middlewareData }) {
 			const arrowRefValue = get(arrowStore);
 			if (!arrowRefValue) return;
