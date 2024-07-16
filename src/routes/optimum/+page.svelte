@@ -5,17 +5,27 @@
   import OutagesTimeline from '$lib/optimum/OutagesTimeline.svelte';
   import OutagesHistory from '$lib/optimum/OutagesHistory.svelte';
   import LatencyLoader from '$lib/optimum/LatencyLoader.svelte';
+  import { timeframeStore } from '$lib/timeframeStore';
   import { Duration, DateTime } from 'luxon';
 
   let outages: Outage[] | null = null;
   let probes: Probe[] | null = null;
   let error: string | null = null;
-  let currentTimeframe = Timeframe.DAY;
+  let currentTimeframe = $timeframeStore;
   const refetchIntervalDuration = Duration.fromObject({ minutes: 5 });
   const probesCache = new Map<Timeframe, { accessed: DateTime; probes: Probe[] }>();
   const probesCacheExpiration = refetchIntervalDuration;
 
+  timeframeStore.subscribe((timeframe) => {
+    if (timeframe !== currentTimeframe) {
+      probes = null;
+      currentTimeframe = timeframe;
+      fetchProbes();
+    }
+  });
+
   async function fetchEndpoint<T>(path: string): Promise<T[]> {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await fetch(path);
     if (!response.ok) {
       throw new Error(`Unable to fetch enpoint ${path}: ${response.status} ${response.statusText}`);
@@ -75,14 +85,6 @@
     fetchProbes();
   }
 
-  async function handleProbeTimeframeChange(event: CustomEvent<Timeframe>) {
-    // fail fast if the timeframe hasn't changed
-    if (event.detail === currentTimeframe) return;
-
-    currentTimeframe = event.detail;
-    await fetchProbes();
-  }
-
   onMount(async () => {
     await fetchAll();
   });
@@ -105,7 +107,7 @@
   {:else}
     <CurrentStatus {outages} />
     <OutagesTimeline {outages} />
-    <LatencyLoader {probes} {currentTimeframe} on:timeframeChange={handleProbeTimeframeChange} />
+    <LatencyLoader {probes} {currentTimeframe} />
     <OutagesHistory {outages} />
   {/if}
 </div>

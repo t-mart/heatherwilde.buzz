@@ -6,6 +6,7 @@
   import { formatAxisDate, formatDuration } from '$lib/format';
   import { subscribeTooltipOwner } from '$lib/tooltipStore';
   import Tooltip from '$lib/Tooltip.svelte';
+  import LatencyTimeframeSelector from '$lib/optimum/LatencyTimeframeSelector.svelte';
   import { setupTooltip } from '$lib/tooltip';
   import { createResizeStore } from '$lib/resizeStore';
   import { bucketProbes } from '$lib/bucketProbes';
@@ -137,23 +138,9 @@
 </script>
 
 <OptimumGraphPanel title="Latency">
-  <ol slot="header-right" class="timeframe-selector">
-    {#each Timeframe.all() as timeframe}
-      <li>
-        <button
-          class:active={currentTimeframe === timeframe}
-          class:link-button={currentTimeframe !== timeframe}
-          disabled={currentTimeframe === timeframe}
-          class="timeframe"
-          on:click={() => {
-            dispatch('timeframeChange', timeframe);
-          }}
-        >
-          {timeframe.display}
-        </button>
-      </li>
-    {/each}
-  </ol>
+  <svelte:fragment slot="header-right">
+    <LatencyTimeframeSelector {currentTimeframe} />
+  </svelte:fragment>
 
   <svelte:fragment slot="main">
     <svg
@@ -231,25 +218,6 @@
 
   .cursor-large-dot {
     fill: hsl(from var(--up-color) h s l / 0.3);
-  }
-
-  .timeframe-selector {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    gap: 0 1rem;
-  }
-
-  .timeframe-selector li button[disabled] {
-    color: var(--text-with-background-color);
-    cursor: default;
-  }
-
-  .timeframe {
-    margin-block-end: 0;
   }
 
   .axis {

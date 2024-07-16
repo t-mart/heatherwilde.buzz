@@ -13,7 +13,6 @@ import { Interval } from 'luxon';
  * @returns The probes bucketed into at most maxBuckets
  */
 export function bucketProbes(probes: Probe[], maxBuckets: number): Probe[] {
-  console.log(probes, maxBuckets);
   // careful: we hardcode that the aggregation function is the mean
 
   if (maxBuckets <= 0) {
