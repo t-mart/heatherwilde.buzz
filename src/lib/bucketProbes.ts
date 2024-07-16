@@ -12,7 +12,8 @@ import { Interval } from 'luxon';
  * @param maxBuckets The maximum number of buckets. Must be greater than 0.
  * @returns The probes bucketed into at most maxBuckets
  */
-export default function (probes: Probe[], maxBuckets: number): Probe[] {
+export function bucketProbes(probes: Probe[], maxBuckets: number): Probe[] {
+	console.log(probes, maxBuckets);
 	// careful: we hardcode that the aggregation function is the mean
 
 	if (maxBuckets <= 0) {

@@ -13,6 +13,7 @@
 	--text-font-size: 1.25rem;
 	--text-with-background-color: #ededed;
 	--viewport-width-name: small;
+	--border-radius: 0.35em;
 
 	/*
 	These font variables shouldn't really be used outside this file.
@@ -163,7 +164,7 @@ a,
 	&:focus-visible {
 		outline: 0.15em dashed var(--up-color);
 		outline-offset: 0.1em;
-		border-radius: 0.25em;
+		border-radius: var(--border-radius);
 	}
 }
 
@@ -185,4 +186,30 @@ button {
 	:root {
 		--viewport-width-name: large;
 	}
+}
+
+.ghost {
+	background: linear-gradient(
+		90deg,
+		var(--non-data-color) 25%,
+		var(--non-data-hover-color) 50%,
+		var(--non-data-color) 75%
+	);
+	opacity: 0.25;
+	background-size: 200% 100%;
+	animation: loading 1.5s infinite;
+	border-radius: var(--border-radius);
+}
+
+@keyframes loading {
+	0% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: -200% 0;
+	}
+}
+
+.ghost::before {
+	content: '\00a0';
 }

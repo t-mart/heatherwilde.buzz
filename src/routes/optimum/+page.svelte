@@ -16,6 +16,8 @@
 	const probesCacheExpiration = refetchIntervalDuration;
 
 	async function fetchEndpoint<T>(path: string): Promise<T[]> {
+		// TODO: delete this! we're testing loading state
+		// await new Promise((resolve) => setTimeout(resolve, 2000));
 		const response = await fetch(path);
 		if (!response.ok) {
 			throw new Error(`Unable to fetch enpoint ${path}: ${response.status} ${response.statusText}`);
@@ -69,8 +71,10 @@
 	}
 
 	async function fetchAll() {
-		await fetchOutages();
-		await fetchProbes();
+		// i don't really want to await these so they can run concurrently. this
+		// is valid thinking, right?
+		fetchOutages();
+		fetchProbes();
 	}
 
 	async function handleProbeTimeframeChange(event: CustomEvent<Timeframe>) {
@@ -98,19 +102,14 @@
 <h1>Heatherwilde Optimum Internet Monitor</h1>
 
 <div>
+	<CurrentStatus {outages} />
+	<OutagesTimeline {outages} />
+	<Latency {probes} {currentTimeframe} on:timeframeChange={handleProbeTimeframeChange} />
+	<OutagesHistory {outages} />
 	{#if error}
 		<p>Error: {error}</p>
 	{:else if outages && probes}
-		{#if outages.length > 0 && probes.length > 0}
-			<CurrentStatus {outages} />
-			<OutagesTimeline {outages} />
-			<Latency
-				{probes}
-				{currentTimeframe}
-				on:timeframeChange={handleProbeTimeframeChange}
-			/>
-			<OutagesHistory {outages} />
-		{:else}
+		{#if outages.length > 0 && probes.length > 0}{:else}
 			<p>No data</p>
 		{/if}
 	{:else}
@@ -122,15 +121,14 @@
 
 <p>
 	Optimum is Heatherwilde's <a
-	href="https://broadbandmap.fcc.gov/location-summary/fixed?lon=-97.635719&lat=30.45961&vlon=-97.635366&vlat=30.460263">only
-	high-speed Internet service provider</a>. There's been a lot of downtime lately
-	and I'm keeping track, as any concerned customer should.
+		href="https://broadbandmap.fcc.gov/location-summary/fixed?lon=-97.635719&lat=30.45961&vlon=-97.635366&vlat=30.460263"
+		>only high-speed Internet service provider</a
+	>. There's been a lot of downtime lately and I'm keeping track, as any concerned customer should.
 </p>
 
 <p>
-	These graphs measure an external host's ability to communicate with my home
-	network over time. In other words, it asks "Is our Internet working well, if
-	at all?".
+	These graphs measure an external host's ability to communicate with my home network over time. In
+	other words, it asks "Is our Internet working well, if at all?".
 </p>
 
 <p>

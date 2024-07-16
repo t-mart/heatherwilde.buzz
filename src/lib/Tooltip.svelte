@@ -18,7 +18,7 @@
 		background-color: var(--text-color);
 		color: var(--background-color);
 		z-index: 3;
-		border-radius: 0.5rem;
+		border-radius: var(--border-radius);
 		border: 1px solid var(--background-color);
 	}
 

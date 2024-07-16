@@ -14,7 +14,7 @@
 	.container {
 		padding: 1rem;
 		border: 1px solid var(--non-data-color);
-		border-radius: 0.5rem;
+		border-radius: var(--border-radius);
 		margin-bottom: 2rem;
 	}
 

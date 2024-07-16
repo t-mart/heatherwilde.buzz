@@ -14,7 +14,7 @@
 	import OptimumGraphPanel from './GraphPanel.svelte';
 	import OptimumOutagesTimelineTooltip from './OutagesTimelineTooltip.svelte';
 
-	export let outages: Outage[];
+	export let outages: Outage[] | null;
 
 	const startOfService = DateTime.fromISO(PUBLIC_START_OF_SERVICE_DATE).startOf('day');
 
@@ -41,7 +41,8 @@
 		tooltipDay = null;
 	}
 
-	function makeDays(outages: Outage[], dayCount: number): Day[] {
+	function makeDays(outages: Outage[] | null, dayCount: number): Day[] | null {
+		if (!outages) return null;
 		// sort outages by property startTime, from earliest to latest
 		outages = outages.sort((a, b) => a.startTime.toMillis() - b.startTime.toMillis());
 
@@ -81,7 +82,8 @@
 		return days;
 	}
 
-	function calculateUptime(outages: Outage[], dayCount: number): number {
+	function calculateUptime(outages: Outage[] | null, dayCount: number): number | null {
+		if (!outages) return null;
 		const start = DateTime.fromMillis(
 			Math.max(startOfService.toMillis(), DateTime.now().minus({ days: dayCount }).toMillis())
 		);
@@ -111,6 +113,7 @@
 			currentTarget: EventTarget & SVGElement;
 		}
 	) {
+		if (!days) return;
 		/*
 		- pointerenter: find the day, show the tooltip
 		- pointermove: find the day, show the tooltip
@@ -160,37 +163,45 @@
 
 <OptimumGraphPanel title="Outages">
 	<svelte:fragment slot="main">
-		<svg
-			preserveAspectRatio="none"
-			height="3rem"
-			viewBox={`0 0 ${svgWidth} ${dayHeight}`}
-			role="list"
-			on:pointerenter={handleGraphPointerEvent}
-			on:pointermove={handleGraphPointerEvent}
-			on:pointerout={handleGraphPointerEvent}
-		>
-			{#each days as day, index}
-				<rect
-					id={dayId(index)}
-					class:day={true}
-					class:selected={day === tooltipDay}
-					class={day.in_service
-						? day.outages.length > 0
-							? 'hasOutage'
-							: 'noOutage'
-						: 'outOfService'}
-					width={dayBarWidth}
-					height={dayHeight}
-					y="0"
-					x={index * dayTotalWidth}
-				/>
-			{/each}
-		</svg>
+		{#if days && uptimePercentage}
+			<svg
+				preserveAspectRatio="none"
+				height="3rem"
+				viewBox={`0 0 ${svgWidth} ${dayHeight}`}
+				role="list"
+				on:pointerenter={handleGraphPointerEvent}
+				on:pointermove={handleGraphPointerEvent}
+				on:pointerout={handleGraphPointerEvent}
+			>
+				{#each days as day, index}
+					<rect
+						id={dayId(index)}
+						class:day={true}
+						class:selected={day === tooltipDay}
+						class={day.in_service
+							? day.outages.length > 0
+								? 'hasOutage'
+								: 'noOutage'
+							: 'outOfService'}
+						width={dayBarWidth}
+						height={dayHeight}
+						y="0"
+						x={index * dayTotalWidth}
+					/>
+				{/each}
+			</svg>
+		{:else}
+			<div class="ghost ghost-viz" />
+		{/if}
 
 		<div class="legend">
 			<span>{dayCount} days ago</span>
 			<div class="spacer" />
-			<span>{parseFloat(uptimePercentage.toFixed(2)).toString()}% uptime</span>
+			{#if days && uptimePercentage}
+				<span>{parseFloat(uptimePercentage.toFixed(2)).toString()}% uptime</span>
+			{:else}
+				<span class="ghost ghost-uptime" />
+			{/if}
 			<div class="spacer" />
 			<span>Today</span>
 		</div>
@@ -204,6 +215,14 @@
 </OptimumGraphPanel>
 
 <style>
+	.ghost-viz {
+		height: 3rem;
+	}
+
+	.ghost-uptime {
+		width: 10ch;
+	}
+
 	.hasOutage {
 		fill: var(--down-color);
 	}

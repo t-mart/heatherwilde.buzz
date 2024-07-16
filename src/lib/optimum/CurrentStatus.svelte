@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { type Outage } from '$lib';
 
-	export let outages: Outage[];
-	$: status = getCurrentStatus(outages);
+	export let outages: Outage[] | null;
 
 	enum Status {
 		Up = 'Up',
@@ -12,7 +11,7 @@
 	function getCurrentStatus(outages: Outage[]): Status {
 		// if last outage in outages has a falsy end time, then we're down
 		const lastOutage = outages[outages.length - 1];
-		if (lastOutage.endTime) {
+		if (lastOutage?.endTime) {
 			return Status.Up;
 		}
 		return Status.Down;
@@ -21,13 +20,13 @@
 
 <h2 class="line">
 	<span>My internet is</span>
-	<span class="status" class:down={status == Status.Down}>
-		{#if status === Status.Up}
-			Up 😎
-		{:else}
-			Down 😟
-		{/if}
-	</span>
+	{#if outages == null}
+		<span class="status ghost"></span>
+	{:else if getCurrentStatus(outages) === Status.Up}
+		<span class="status up">Up 😎</span>
+	{:else}
+		<span class="status down">Down 😟</span>
+	{/if}
 </h2>
 
 <style>
@@ -42,15 +41,22 @@
 	}
 
 	.status {
-		background-color: var(--up-color);
 		color: var(--text-with-background-color);
 		padding: 0.5rem 1.25rem;
-		border-radius: 0.25rem;
+		border-radius: var(--border-radius);
 		text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
 		text-align: center;
 	}
 
-	.status.down {
+	.up {
+		background-color: var(--up-color);
+	}
+
+	.down {
 		background-color: var(--down-color);
+	}
+
+	.ghost {
+		width: 8ch;
 	}
 </style>

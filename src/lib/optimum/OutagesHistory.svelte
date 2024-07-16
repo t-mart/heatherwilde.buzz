@@ -4,12 +4,13 @@
 	import { DateTime, Interval, Duration } from 'luxon';
 
 	const millisecondsInMinute = 1000 * 60;
-	export let outages: Outage[];
+	export let outages: Outage[] | null;
 
-	$: outageHistoryItems = outages
-		.slice()
-		.sort((a, b) => b.startTime.toMillis() - a.startTime.toMillis())
-		.map(getOutageHistoryItem);
+	$: outageHistoryItems =
+		outages
+			?.slice()
+			.sort((a, b) => b.startTime.toMillis() - a.startTime.toMillis())
+			.map(getOutageHistoryItem) ?? null;
 
 	type OutageHistoryItem = {
 		startTime: string;
@@ -43,12 +44,17 @@
 	</div>
 
 	<ol class="items">
-		{#each outageHistoryItems as outage}
-			<li>
-				{#if outage.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
-				<time>{outage.startTime}</time> - {outage.duration}
-			</li>
-		{/each}
+		{#if !outageHistoryItems}
+			<li class="ghost"/>
+			<li class="ghost"/>
+		{:else}
+			{#each outageHistoryItems as outage}
+				<li>
+					{#if outage.ongoing}<span class="ongoing">⚠️ Ongoing</span>{/if}
+					<time>{outage.startTime}</time> - {outage.duration}
+				</li>
+			{/each}
+		{/if}
 	</ol>
 </div>
 

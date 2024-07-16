@@ -25,7 +25,7 @@
 
 	svg {
 		border: 3px solid var(--text-color);
-		border-radius: 0.5rem;
+		border-radius: var(--border-radius);
 		width: 100%;
 		height: 100%;
 	}
