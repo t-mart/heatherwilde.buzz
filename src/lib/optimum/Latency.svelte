@@ -16,7 +16,8 @@
   export let probes: Probe[];
   export let currentTimeframe: Timeframe;
 
-  // expose this to let the ghost work
+  // expose this to let the ghost work. i don't want to default this because it
+  // really ought to come from above.
   export let heightPx: number;
 
   // expose these, but they have reasonable defaults
@@ -31,7 +32,7 @@
     y: d3.ScaleLinear<number, number, never>;
     line: d3.Line<Probe>;
   };
-  
+
   // this is the client width of the SVG as well as the viewbox width. we use
   // the same variable so that we can scale to the actual width of the element.
   // this value will change through resizes to make sure the graph looks good.

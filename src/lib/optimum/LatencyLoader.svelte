@@ -16,7 +16,7 @@
 {#if probes === null}
   <GraphPanel title="Latency">
     <div slot="header-right" class="ghost ghost-header-right" />
-    <div slot="main" class="ghost ghost-main" />
+    <div slot="main" class="ghost ghost-main" style:height={`${heightPx}px`} />
   </GraphPanel>
 {:else}
   <Latency {probes} {currentTimeframe} {heightPx} />
@@ -24,10 +24,6 @@
 
 <style>
   .ghost-header-right {
-    width: 20ch;
-  }
-
-  .ghost-main {
-    height: 135px;
+    width: 15ch;
   }
 </style>
