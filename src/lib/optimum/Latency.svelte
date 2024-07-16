@@ -13,8 +13,17 @@
   import OptimumGraphPanel from './GraphPanel.svelte';
   import LatencyTooltip from './LatencyTooltip.svelte';
 
-  export let probes: Probe[] | null;
+  export let probes: Probe[];
   export let currentTimeframe: Timeframe;
+
+  // expose this to let the ghost work
+  export let heightPx: number;
+
+  // expose these, but they have reasonable defaults
+  export let marginLeftPx = 60;
+  export let marginRightPx = 20;
+  export let marginTopPx = 10;
+  export let marginBottomPx = 20;
 
   type PlotData = {
     probes: Probe[];
@@ -22,14 +31,12 @@
     y: d3.ScaleLinear<number, number, never>;
     line: d3.Line<Probe>;
   };
-  // this is the client width of the SVG as well as the viewbox width
-  // we use the same variable so that we can scale to the actual width of the element
+  
+  // this is the client width of the SVG as well as the viewbox width. we use
+  // the same variable so that we can scale to the actual width of the element.
+  // this value will change through resizes to make sure the graph looks good.
   let svgClientWidth = 640;
-  const height = 125;
-  const marginTop = 10;
-  const marginRight = 20;
-  const marginBottom = 20;
-  const marginLeft = 60;
+
   const cursorBisect = d3.bisector((d: Probe) => d.time.toJSDate());
 
   const dispatch = createEventDispatcher();
@@ -43,7 +50,7 @@
   let svgElement: SVGSVGElement;
   let gx: SVGGElement;
   let gy: SVGGElement;
-  let plotData: PlotData | null;
+  let plotData: PlotData;
 
   let unsubscribeResize: () => void;
 
@@ -55,8 +62,7 @@
     cursorProbe = null;
   }
 
-  function draw(probes: Probe[] | null, width: number): PlotData | null {
-    if (!probes) return null;
+  function draw(probes: Probe[], width: number): PlotData {
     // the 6 is arbitrary, but looks good. depends on width of the graph
     let bucketCount = Math.min(Math.floor(width / 6), probes.length);
     let probes_ = bucketProbes(probes, bucketCount);
@@ -68,12 +74,12 @@
     probes_.sort((a, b) => a.time.toMillis() - b.time.toMillis());
 
     let x = d3.scaleTime(d3.extent(probes_, (d) => d.time.toJSDate()) as [Date, Date], [
-      marginLeft,
-      width - marginRight
+      marginLeftPx,
+      width - marginRightPx
     ]);
     let y = d3.scaleLinear(d3.extent(probes_, (d) => d.duration) as [number, number], [
-      height - marginBottom,
-      marginTop
+      heightPx - marginBottomPx,
+      marginTopPx
     ]);
 
     let line = d3.line<Probe>(
@@ -101,7 +107,6 @@
       currentTarget: EventTarget & SVGRectElement;
     }
   ) {
-    if (!plotData) return;
     const cursorFromTouch = event.pointerType === 'touch';
     switch (event.type) {
       case 'pointerenter':
@@ -152,39 +157,34 @@
   <svelte:fragment slot="main">
     <svg
       width="100%"
-      class:not-ready={!plotData}
       bind:this={svgElement}
-      viewBox={`0 0 ${svgClientWidth} ${height}`}
+      viewBox={`0 0 ${svgClientWidth} ${heightPx}`}
       preserveAspectRatio="none"
     >
-      <g class="axis x-axis" bind:this={gx} transform="translate(0,{height - marginBottom})" />
-      <g class="axis y-axis" bind:this={gy} transform="translate({marginLeft},0)" />
-      {#if plotData}
-        <path class="line" d={plotData.line(plotData.probes)} />
-        {#if cursorProbe}
-          <line
-            class="cursor-line"
-            x1={plotData.x(cursorProbe.time.toJSDate())}
-            y1={marginTop}
-            x2={plotData.x(cursorProbe.time.toJSDate())}
-            y2={height - marginBottom}
-            use:tooltipReferenceAction
-          />
-          <circle
-            class="cursor-large-dot"
-            cx={plotData.x(cursorProbe.time.toJSDate())}
-            cy={plotData.y(cursorProbe.duration)}
-            r="15"
-          />
-          <circle
-            class="cursor-dot"
-            cx={plotData.x(cursorProbe.time.toJSDate())}
-            cy={plotData.y(cursorProbe.duration)}
-            r="5"
-          />
-        {/if}
-      {:else}
-        <rect class="ghost" x="0" y="0" width={svgClientWidth} {height} rx="10" ry="10" />
+      <g class="axis x-axis" bind:this={gx} transform="translate(0,{heightPx - marginBottomPx})" />
+      <g class="axis y-axis" bind:this={gy} transform="translate({marginLeftPx},0)" />
+      <path class="line" d={plotData.line(plotData.probes)} />
+      {#if cursorProbe}
+        <line
+          class="cursor-line"
+          x1={plotData.x(cursorProbe.time.toJSDate())}
+          y1={marginTopPx}
+          x2={plotData.x(cursorProbe.time.toJSDate())}
+          y2={heightPx - marginBottomPx}
+          use:tooltipReferenceAction
+        />
+        <circle
+          class="cursor-large-dot"
+          cx={plotData.x(cursorProbe.time.toJSDate())}
+          cy={plotData.y(cursorProbe.duration)}
+          r="15"
+        />
+        <circle
+          class="cursor-dot"
+          cx={plotData.x(cursorProbe.time.toJSDate())}
+          cy={plotData.y(cursorProbe.duration)}
+          r="5"
+        />
       {/if}
 
       <!--
@@ -193,20 +193,16 @@
 		-->
       <rect
         class="cursor-space"
-        x={marginLeft}
-        y={marginTop}
-        width={svgClientWidth - marginLeft - marginRight}
-        height={height - marginBottom - marginTop}
+        x={marginLeftPx}
+        y={marginTopPx}
+        width={svgClientWidth - marginLeftPx - marginRightPx}
+        height={heightPx - marginBottomPx - marginTopPx}
         on:pointerenter={handleGraphPointerEvent}
         on:pointermove={handleGraphPointerEvent}
         on:pointerout={handleGraphPointerEvent}
         role="presentation"
       />
     </svg>
-
-    {#if !plotData}
-      <div class="ghost" />
-    {/if}
 
     {#if cursorProbe}
       <Tooltip {tooltipFloatingAction} {tooltipArrowStore} onCloseFn={() => (cursorProbe = null)}>
@@ -217,18 +213,6 @@
 </OptimumGraphPanel>
 
 <style>
-  /* ugly hack. we need the svg always on page because of complicated
-  dependencies in this component. this mostly works fine, but is a quick flash
-  of wrong-width content as the resize observer updates. */
-  .not-ready {
-    position: absolute;
-    left: -9999px;
-  }
-
-  .ghost {
-    height: 125px;
-  }
-
   .cursor-space {
     touch-action: none;
     cursor: crosshair;
@@ -261,6 +245,10 @@
   .timeframe-selector li button[disabled] {
     color: var(--text-with-background-color);
     cursor: default;
+  }
+
+  .timeframe {
+    margin-block-end: 0;
   }
 
   .axis {

@@ -212,3 +212,12 @@ button {
 .ghost::before {
   content: '\00a0';
 }
+
+svg {
+    /*
+    wow, what a bug. svg are inline by default! and that was messing up it's
+    height. setting to block works as expected.
+    https://stackoverflow.com/a/22337325/235992
+    */
+	display: block;
+}

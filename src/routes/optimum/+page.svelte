@@ -4,7 +4,7 @@
   import CurrentStatus from '$lib/optimum/CurrentStatus.svelte';
   import OutagesTimeline from '$lib/optimum/OutagesTimeline.svelte';
   import OutagesHistory from '$lib/optimum/OutagesHistory.svelte';
-  import Latency from '$lib/optimum/Latency.svelte';
+  import LatencyLoader from '$lib/optimum/LatencyLoader.svelte';
   import { Duration, DateTime } from 'luxon';
 
   let outages: Outage[] | null = null;
@@ -16,8 +16,6 @@
   const probesCacheExpiration = refetchIntervalDuration;
 
   async function fetchEndpoint<T>(path: string): Promise<T[]> {
-    // TODO: delete this! we're testing loading state
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
     const response = await fetch(path);
     if (!response.ok) {
       throw new Error(`Unable to fetch enpoint ${path}: ${response.status} ${response.statusText}`);
@@ -107,7 +105,7 @@
   {:else}
     <CurrentStatus {outages} />
     <OutagesTimeline {outages} />
-    <Latency {probes} {currentTimeframe} on:timeframeChange={handleProbeTimeframeChange} />
+    <LatencyLoader {probes} {currentTimeframe} on:timeframeChange={handleProbeTimeframeChange} />
     <OutagesHistory {outages} />
   {/if}
 </div>

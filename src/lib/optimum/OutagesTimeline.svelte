@@ -27,9 +27,9 @@
   let dayCount: number = 90;
   const dayBarWidth = 3;
   const dayGapWidth = 2;
-  const dayHeight = 34;
+  const dayHeight = 26;
   const dayTotalWidth = dayBarWidth + dayGapWidth;
-  $: svgWidth = dayCount * dayTotalWidth - dayGapWidth; // remove the last gap
+  $: svgWidth = dayCount * dayTotalWidth - dayGapWidth + 1; // remove the last gap
   $: days = makeDays(outages, dayCount);
   $: uptimePercentage = calculateUptime(outages, dayCount);
   $: clearTooltipOnOutageChange(outages);
@@ -164,9 +164,13 @@
 <OptimumGraphPanel title="Outages">
   <svelte:fragment slot="main">
     {#if days && uptimePercentage}
+      <!--
+      no need to preseve aspect ratio. scaling doesn't really matter for rects
+      in this presentation. we care more about being able to match the sizing
+      when we ghost (during loading).
+      -->
       <svg
         preserveAspectRatio="none"
-        height="3rem"
         viewBox={`0 0 ${svgWidth} ${dayHeight}`}
         role="list"
         on:pointerenter={handleGraphPointerEvent}
@@ -249,11 +253,12 @@
 
   svg {
     width: 100%;
+    height: 3rem;
     touch-action: none;
   }
 
   .legend {
-    margin-top: 0.5rem;
+    margin-block-start: 0.5rem;
     font-size: 1rem;
     display: flex;
     align-items: center;
