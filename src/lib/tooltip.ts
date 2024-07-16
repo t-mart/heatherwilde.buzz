@@ -3,39 +3,39 @@ import { flip, offset, shift, type VirtualElement } from 'svelte-floating-ui/dom
 import { get, writable, type Writable } from 'svelte/store';
 
 export function setupTooltip() {
-	const arrowStore = writable<HTMLElement | null>(null);
-	const [referenceAction, floatingAction, updatePositionFn] = createFloatingActions({
-		strategy: 'absolute',
-		placement: 'top',
-		middleware: [offset(6), flip(), shift(), arrow({ element: arrowStore })],
-		onComputed({ placement, middlewareData }) {
-			const arrowRefValue = get(arrowStore);
-			if (!arrowRefValue) return;
+  const arrowStore = writable<HTMLElement | null>(null);
+  const [referenceAction, floatingAction, updatePositionFn] = createFloatingActions({
+    strategy: 'absolute',
+    placement: 'top',
+    middleware: [offset(6), flip(), shift(), arrow({ element: arrowStore })],
+    onComputed({ placement, middlewareData }) {
+      const arrowRefValue = get(arrowStore);
+      if (!arrowRefValue) return;
 
-			const { x, y } = middlewareData.arrow!;
-			const staticSide = {
-				top: 'bottom',
-				right: 'left',
-				bottom: 'top',
-				left: 'right'
-			}[placement.split('-')[0]]!;
+      const { x, y } = middlewareData.arrow!;
+      const staticSide = {
+        top: 'bottom',
+        right: 'left',
+        bottom: 'top',
+        left: 'right'
+      }[placement.split('-')[0]]!;
 
-			Object.assign(arrowRefValue.style, {
-				left: x != null ? `${x}px` : '',
-				top: y != null ? `${y}px` : '',
-				[staticSide]: '-4px'
-			});
-		}
-	});
-	return {
-		// this works on SVGElement too, but author declared too narrowly, so we
-		// cast. may accept my PR at a later date:
-		// https://github.com/fedorovvvv/svelte-floating-ui/pull/17
-		tooltipReferenceAction: referenceAction as (
-			node: HTMLElement | SVGElement | Writable<VirtualElement> | VirtualElement
-		) => void,
-		tooltipFloatingAction: floatingAction,
-		updateTooltipPositionFn: updatePositionFn,
-		tooltipArrowStore: arrowStore
-	};
+      Object.assign(arrowRefValue.style, {
+        left: x != null ? `${x}px` : '',
+        top: y != null ? `${y}px` : '',
+        [staticSide]: '-4px'
+      });
+    }
+  });
+  return {
+    // this works on SVGElement too, but author declared too narrowly, so we
+    // cast. may accept my PR at a later date:
+    // https://github.com/fedorovvvv/svelte-floating-ui/pull/17
+    tooltipReferenceAction: referenceAction as (
+      node: HTMLElement | SVGElement | Writable<VirtualElement> | VirtualElement
+    ) => void,
+    tooltipFloatingAction: floatingAction,
+    updateTooltipPositionFn: updatePositionFn,
+    tooltipArrowStore: arrowStore
+  };
 }

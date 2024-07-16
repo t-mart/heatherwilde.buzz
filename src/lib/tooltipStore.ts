@@ -16,12 +16,12 @@ const tooltipOwnerStore = writable<string | null>(null);
  * @returns A function to set the tooltip owner to the current component
  */
 export function subscribeTooltipOwner(myName: string, preemptFn: () => void) {
-	tooltipOwnerStore.subscribe((owner) => {
-		if (owner !== myName) {
-			preemptFn();
-		}
-	});
-	return () => {
-		tooltipOwnerStore.set(myName);
-	};
+  tooltipOwnerStore.subscribe((owner) => {
+    if (owner !== myName) {
+      preemptFn();
+    }
+  });
+  return () => {
+    tooltipOwnerStore.set(myName);
+  };
 }

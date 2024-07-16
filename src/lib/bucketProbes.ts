@@ -13,46 +13,45 @@ import { Interval } from 'luxon';
  * @returns The probes bucketed into at most maxBuckets
  */
 export function bucketProbes(probes: Probe[], maxBuckets: number): Probe[] {
-	console.log(probes, maxBuckets);
-	// careful: we hardcode that the aggregation function is the mean
+  console.log(probes, maxBuckets);
+  // careful: we hardcode that the aggregation function is the mean
 
-	if (maxBuckets <= 0) {
-		throw new Error('maxBuckets must be greater than 0');
-	}
+  if (maxBuckets <= 0) {
+    throw new Error('maxBuckets must be greater than 0');
+  }
 
-	if (probes.length <= maxBuckets) {
-		return probes;
-	}
+  if (probes.length <= maxBuckets) {
+    return probes;
+  }
 
-	const _probes = Array.from(probes);
-	_probes.sort((a, b) => a.time.toMillis() - b.time.toMillis());
+  const _probes = Array.from(probes);
+  _probes.sort((a, b) => a.time.toMillis() - b.time.toMillis());
 
-	const earliest = _probes[0].time;
-	// add 1 millisecond to the latest probe to include in the last bucket.
-	// luxon intervals are left-inclusive, right-exclusive.
-	const latest = _probes[_probes.length - 1].time.plus({ milliseconds: 1 });
-	const intervals = Interval.fromDateTimes(earliest, latest).divideEqually(maxBuckets);
-	const buckets: Probe[] = [];
-	let curProbeIdx = 0;
+  const earliest = _probes[0].time;
+  // add 1 millisecond to the latest probe to include in the last bucket.
+  // luxon intervals are left-inclusive, right-exclusive.
+  const latest = _probes[_probes.length - 1].time.plus({ milliseconds: 1 });
+  const intervals = Interval.fromDateTimes(earliest, latest).divideEqually(maxBuckets);
+  const buckets: Probe[] = [];
+  let curProbeIdx = 0;
 
-	for (const interval of intervals) {
-		const bucket = [];
-		while (curProbeIdx < _probes.length && interval.contains(_probes[curProbeIdx].time)) {
-			const probe = _probes[curProbeIdx];
-			if (!probe.time.isValid) throw new Error('Invalid time in probe');
-			bucket.push(probe);
-			curProbeIdx++;
-		}
+  for (const interval of intervals) {
+    const bucket = [];
+    while (curProbeIdx < _probes.length && interval.contains(_probes[curProbeIdx].time)) {
+      const probe = _probes[curProbeIdx];
+      if (!probe.time.isValid) throw new Error('Invalid time in probe');
+      bucket.push(probe);
+      curProbeIdx++;
+    }
 
-		if (bucket.length > 0) {
-			let meanDuration =
-				bucket.reduce((acc, probe) => acc + probe.duration, 0) / bucket.length;
-			buckets.push({
-				time: bucket[0].time,
-				duration: meanDuration
-			});
-		}
-	}
+    if (bucket.length > 0) {
+      let meanDuration = bucket.reduce((acc, probe) => acc + probe.duration, 0) / bucket.length;
+      buckets.push({
+        time: bucket[0].time,
+        duration: meanDuration
+      });
+    }
+  }
 
-	return buckets;
+  return buckets;
 }
