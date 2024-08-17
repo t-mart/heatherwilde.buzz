@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { type Outage, type Probe, type APIOutage, type APIProbe, Timeframe } from '$lib';
   import CurrentStatus from '$lib/optimum/CurrentStatus.svelte';
   import OutagesTimeline from '$lib/optimum/OutagesTimeline.svelte';
@@ -15,14 +15,6 @@
   const refetchIntervalDuration = Duration.fromObject({ minutes: 5 });
   const probesCache = new Map<Timeframe, { accessed: DateTime; probes: Probe[] }>();
   const probesCacheExpiration = refetchIntervalDuration;
-
-  timeframeStore.subscribe((timeframe) => {
-    if (timeframe !== currentTimeframe) {
-      probes = null;
-      currentTimeframe = timeframe;
-      fetchProbes();
-    }
-  });
 
   async function fetchEndpoint<T>(path: string): Promise<T[]> {
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -78,20 +70,25 @@
     probesCache.set(currentTimeframe, { accessed: DateTime.now(), probes: probes! });
   }
 
-  async function fetchAll() {
-    // i don't really want to await these so they can run concurrently. this
-    // is valid thinking, right?
+  function fetchAll() {}
+
+  onMount(() => {
+    const unsub = timeframeStore.subscribe((timeframe) => {
+      if (timeframe !== currentTimeframe) {
+        probes = null;
+        currentTimeframe = timeframe;
+        fetchProbes();
+      }
+    });
+
     fetchOutages();
     fetchProbes();
-  }
 
-  onMount(async () => {
-    await fetchAll();
-  });
-
-  const interval = setInterval(fetchAll, refetchIntervalDuration.toMillis());
-  onDestroy(() => {
-    clearInterval(interval);
+    const interval = setInterval(fetchAll, refetchIntervalDuration.toMillis());
+    return () => {
+      unsub();
+      clearInterval(interval);
+    };
   });
 </script>
 

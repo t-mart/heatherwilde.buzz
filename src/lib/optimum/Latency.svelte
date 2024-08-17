@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as d3 from 'd3';
-  import { onDestroy, onMount, createEventDispatcher } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
 
   import { type Probe, Timeframe } from '$lib';
   import { formatAxisDate, formatDuration } from '$lib/format';
@@ -25,7 +25,7 @@
   export let marginLeftPx = 60;
   export let marginRightPx = 20;
   export let marginTopPx = 10;
-  export let marginBottomPx = 20;
+  export let marginBottomPx = 25;
 
   type PlotData = {
     probes: Probe[];
@@ -40,8 +40,6 @@
   let svgClientWidth = 640;
 
   const cursorBisect = d3.bisector((d: Probe) => d.time.toJSDate());
-
-  const dispatch = createEventDispatcher();
 
   let cursorProbe: Probe | null = null;
   const { tooltipReferenceAction, tooltipFloatingAction, tooltipArrowStore } = setupTooltip();
@@ -89,16 +87,23 @@
       (d) => y(d.duration)
     );
 
+    // draw axes. an interesting note i came across debugging tick count:
+    // https://stackoverflow.com/a/13102118/235992 "The default ticks for
+    // quantitative scales are multiples of 2, 5 and 10.", so we either gotta
+    // accept those defaults (using a fixed 2 for y scale) or compute
+    // dynmaically (x scale).
+
     let gySelection = d3.select(gy);
     gySelection.call(
       d3
         .axisLeft(y)
-        .ticks(3)
+        .ticks(2)
         .tickFormat((d) => formatDuration(d as number))
     );
 
     let gxSelection = d3.select(gx);
-    let tickCount = Math.max(1, Math.floor(width / 100));
+    console.log(width);
+    let tickCount = width < 400 ? 2 : 5;
     gxSelection.call(d3.axisBottom<Date>(x).tickFormat(formatAxisDate).ticks(tickCount));
 
     return { probes: probes_, x, y, line };

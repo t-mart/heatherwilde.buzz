@@ -26,9 +26,3 @@
 {:else}
   <Latency {probes} {currentTimeframe} {heightPx} />
 {/if}
-
-<style>
-  .ghost-header-right {
-    width: 15ch;
-  }
-</style>
