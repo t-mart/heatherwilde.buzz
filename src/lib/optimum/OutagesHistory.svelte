@@ -40,7 +40,7 @@
 <div class="container">
   <div class="heading">
     <h3>Outage History</h3>
-    <a href="/api/optimum-outages">Download JSON</a>
+    <a href="/api/optimum/outages">Download JSON</a>
   </div>
 
   <ol class="items">
