@@ -1,6 +1,6 @@
 <script lang="ts">
   import { pointer } from 'd3';
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import { derived } from 'svelte/store';
   import { DateTime, Interval } from 'luxon';
 
@@ -34,8 +34,6 @@
   $: uptimePercentage = calculateUptime(outages, dayCount);
   $: clearTooltipOnOutageChange(outages);
 
-  let unsubscribeDayCount: () => void;
-
   /** dummy method to clear the tooltip because outage update will likely make it invalid */
   function clearTooltipOnOutageChange(_: any) {
     tooltipDay = null;
@@ -43,6 +41,7 @@
 
   function makeDays(outages: Outage[] | null, dayCount: number): Day[] | null {
     if (!outages) return null;
+
     // sort outages by property startTime, from earliest to latest
     outages = outages.sort((a, b) => a.startTime.toMillis() - b.startTime.toMillis());
 
@@ -52,12 +51,18 @@
     let curDate = now.startOf('day').minus({ days: dayCount - 1 });
     let curOutageIndex = 0;
 
+    // fast-forward to the first outage that could be in the window
+    while (curOutageIndex < outages.length && (outages[curOutageIndex].endTime ?? now) < curDate) {
+      curOutageIndex++;
+    }
+
     while (curDate <= now) {
       const curDay = {
         start: curDate,
         in_service: serviceInterval.contains(curDate),
         outages: []
       } as Day;
+      console.log(curDay.start.toRFC2822());
 
       const curDayInterval = Interval.fromDateTimes(curDate, curDate.plus({ days: 1 }));
 
@@ -69,6 +74,7 @@
         );
 
         if (curOutageInterval.overlaps(curDayInterval)) {
+          console.log('overlap');
           curDay.outages.push(curOutage);
           curOutageIndex++;
         } else {
@@ -94,7 +100,6 @@
 
     let uptimeDuration = Interval.fromDateTimes(windowStart, windowEnd).toDuration();
     outages.forEach((outage) => {
-      
       const outageStart = outage.startTime;
       const outageEnd = outage.endTime ?? DateTime.now();
       const outageInterval = Interval.fromDateTimes(outageStart, outageEnd);
@@ -156,13 +161,13 @@
         .trim();
       return viewportWidthVar == 'large' ? 90 : viewportWidthVar == 'medium' ? 60 : 30;
     });
-    unsubscribeDayCount = dayCountStore.subscribe((value) => {
+    const unsubscribeDayCount = dayCountStore.subscribe((value) => {
       dayCount = value;
     });
-  });
 
-  onDestroy(() => {
-    unsubscribeDayCount();
+    return () => {
+      unsubscribeDayCount();
+    };
   });
 </script>
 
