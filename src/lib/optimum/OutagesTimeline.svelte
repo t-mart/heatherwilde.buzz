@@ -84,24 +84,29 @@
 
   function calculateUptime(outages: Outage[] | null, dayCount: number): number | null {
     if (!outages) return null;
-    const start = DateTime.fromMillis(
+    const windowStart = DateTime.fromMillis(
       Math.max(startOfService.toMillis(), DateTime.now().minus({ days: dayCount }).toMillis())
     );
-    const end = DateTime.now();
-    const totalDuration = Interval.fromDateTimes(start, end).toDuration();
-    let uptimeDuration = Interval.fromDateTimes(start, end).toDuration();
+    const windowEnd = DateTime.now();
+    const windowInterval = Interval.fromDateTimes(windowStart, windowEnd);
+
+    const duration = windowInterval.toDuration();
+
+    let uptimeDuration = Interval.fromDateTimes(windowStart, windowEnd).toDuration();
     outages.forEach((outage) => {
-      const outageStartMin = DateTime.fromMillis(
-        Math.max(outage.startTime.toMillis(), start.toMillis())
-      );
-      const outageDuration = Interval.fromDateTimes(
-        outageStartMin,
-        outage.endTime ?? DateTime.now()
-      ).toDuration();
-      uptimeDuration = uptimeDuration.minus(outageDuration);
+      
+      const outageStart = outage.startTime;
+      const outageEnd = outage.endTime ?? DateTime.now();
+      const outageInterval = Interval.fromDateTimes(outageStart, outageEnd);
+
+      const intersection = windowInterval.intersection(outageInterval);
+
+      if (!intersection) return;
+
+      uptimeDuration = uptimeDuration.minus(intersection.toDuration());
     });
 
-    return (uptimeDuration.toMillis() / totalDuration.toMillis()) * 100;
+    return (uptimeDuration.toMillis() / duration.toMillis()) * 100;
   }
 
   function dayId(index: number) {
