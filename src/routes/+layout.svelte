@@ -7,6 +7,8 @@
 <div class="container">
   <header>
     <nav class="standard-black">
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
+      <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
       <ol class:collapsed={navCollapsed}>
         <li class="nav-buttons">
           <button

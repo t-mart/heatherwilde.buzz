@@ -102,7 +102,6 @@
     );
 
     let gxSelection = d3.select(gx);
-    console.log(width);
     let tickCount = width < 400 ? 2 : 5;
     gxSelection.call(d3.axisBottom<Date>(x).tickFormat(formatAxisDate).ticks(tickCount));
 
