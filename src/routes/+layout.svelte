@@ -1,8 +1,21 @@
 <script lang="ts">
   import HamburgerIcon from '$lib/icons/Hamburger.svelte';
   import LogoIcon from '$lib/icons/Logo.svelte';
+  import {
+    PUBLIC_PLAUSIBLE_SCRIPT_SRC,
+    PUBLIC_PLAUSIBLE_SCRIPT_DATA_DOMAIN
+  } from '$env/static/public';
+
   let navCollapsed = true;
 </script>
+
+<svelte:head>
+  <script
+    defer
+    data-domain={PUBLIC_PLAUSIBLE_SCRIPT_DATA_DOMAIN}
+    src={PUBLIC_PLAUSIBLE_SCRIPT_SRC}
+  ></script>
+</svelte:head>
 
 <div class="container">
   <header>
