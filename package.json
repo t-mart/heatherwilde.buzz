@@ -16,7 +16,7 @@
     "@sveltejs/adapter-static": "^3.0.4",
     "@sveltejs/adapter-vercel": "^5.4.1",
     "@sveltejs/kit": "^2",
-    "@sveltejs/vite-plugin-svelte": "^3",
+    "@sveltejs/vite-plugin-svelte": "^5",
     "@types/d3": "^7.4.3",
     "@types/eslint": "^9",
     "@types/luxon": "^3.4.2",
