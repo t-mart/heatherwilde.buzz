@@ -28,7 +28,7 @@
     "prettier-plugin-organize-imports": "^4.0.0",
     "prettier-plugin-svelte": "^3.2.5",
     "svelte": "^5",
-    "svelte-check": "^3.8.4",
+    "svelte-check": "^4.1.1",
     "tslib": "^2.6.3",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.0-alpha.20",
