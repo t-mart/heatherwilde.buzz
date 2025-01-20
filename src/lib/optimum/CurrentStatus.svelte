@@ -3,18 +3,11 @@
 
   export let outages: Outage[] | null;
 
-  enum Status {
-    Up = 'Up',
-    Down = 'Down'
-  }
-
-  function getCurrentStatus(outages: Outage[]): Status {
+  function isCurrentlyUp(outages: Outage[]): boolean {
     // if last outage in outages has a falsy end time, then we're down
     const lastOutage = outages[outages.length - 1];
-    if (lastOutage?.endTime) {
-      return Status.Up;
-    }
-    return Status.Down;
+
+    return lastOutage === undefined || lastOutage.endTime !== null;
   }
 </script>
 
@@ -22,7 +15,7 @@
   <span>My internet is</span>
   {#if outages == null}
     <span class="status ghost"></span>
-  {:else if getCurrentStatus(outages) === Status.Up}
+  {:else if isCurrentlyUp(outages)}
     <span class="status up">Up 😎</span>
   {:else}
     <span class="status down">Down 😟</span>
