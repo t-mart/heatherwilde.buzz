@@ -45,8 +45,8 @@
 
   <ol class="items">
     {#if !outageHistoryItems}
-      <li class="ghost" />
-      <li class="ghost" />
+      <li class="ghost"></li>
+      <li class="ghost"></li>
     {:else}
       {#each outageHistoryItems as outage}
         <li>

@@ -205,18 +205,18 @@
         {/each}
       </svg>
     {:else}
-      <div class="ghost ghost-viz" />
+      <div class="ghost ghost-viz"></div>
     {/if}
 
     <div class="legend">
       <span>{dayCount} days ago</span>
-      <div class="spacer" />
+      <div class="spacer"></div>
       {#if days && uptimePercentage}
         <span>{parseFloat(uptimePercentage.toFixed(2)).toString()}% uptime</span>
       {:else}
-        <span class="ghost ghost-uptime" />
+        <span class="ghost ghost-uptime"></span>
       {/if}
-      <div class="spacer" />
+      <div class="spacer"></div>
       <span>Today</span>
     </div>
 

@@ -21,7 +21,7 @@
     <div slot="header-right">
       <LatencyTimeframeSelector {currentTimeframe} />
     </div>
-    <div slot="main" class="ghost ghost-main" style:height={`${heightPx}px`} />
+    <div slot="main" class="ghost ghost-main" style:height={`${heightPx}px`}></div>
   </GraphPanel>
 {:else}
   <Latency {probes} {currentTimeframe} {heightPx} />

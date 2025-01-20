@@ -22,7 +22,7 @@
     if (!response.ok) {
       throw new Error(`Unable to fetch enpoint ${path}: ${response.status} ${response.statusText}`);
     }
-    return <T[]>await response.json();
+    return await response.json();
   }
 
   async function fetchOutages() {
