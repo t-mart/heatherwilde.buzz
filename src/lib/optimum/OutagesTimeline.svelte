@@ -62,7 +62,6 @@
         in_service: serviceInterval.contains(curDate),
         outages: []
       } as Day;
-      console.log(curDay.start.toRFC2822());
 
       const curDayInterval = Interval.fromDateTimes(curDate, curDate.plus({ days: 1 }));
 
@@ -74,7 +73,6 @@
         );
 
         if (curOutageInterval.overlaps(curDayInterval)) {
-          console.log('overlap');
           curDay.outages.push(curOutage);
           curOutageIndex++;
         } else {

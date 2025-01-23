@@ -8,7 +8,7 @@ import type { RequestHandler } from './$types';
 // Goals
 // - Over the last 90 days, for each day, show downtime incidents that occurred
 
-const lookbackThresholdDuration = Duration.fromObject({ days: 90 });
+const lookbackThresholdDuration = Duration.fromObject({ years: 1 });
 
 class ShapeError extends Error {
   constructor(message: string) {
@@ -30,7 +30,7 @@ function itemToIncident(item: Record<string, AttributeValue>) {
   };
 }
 
-export const GET: RequestHandler = async ({}) => {
+export const GET: RequestHandler = async () => {
   const client = new DynamoDBClient();
 
   const command = new QueryCommand({
