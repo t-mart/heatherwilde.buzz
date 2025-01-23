@@ -2,13 +2,10 @@ import { INCIDENT_TABLE_NAME, PROBE_TARGET_HOST_NAME } from '$env/static/private
 import type { APIOutage } from '$lib';
 import { DynamoDBClient, QueryCommand, type AttributeValue } from '@aws-sdk/client-dynamodb';
 import { error } from '@sveltejs/kit';
-import { DateTime, Duration } from 'luxon';
 import type { RequestHandler } from './$types';
 
 // Goals
-// - Over the last 90 days, for each day, show downtime incidents that occurred
-
-const lookbackThresholdDuration = Duration.fromObject({ years: 1 });
+// - For each day, show downtime incidents that occurred
 
 class ShapeError extends Error {
   constructor(message: string) {
@@ -35,10 +32,9 @@ export const GET: RequestHandler = async () => {
 
   const command = new QueryCommand({
     TableName: INCIDENT_TABLE_NAME,
-    KeyConditionExpression: 'host = :host AND start_time > :since',
+    KeyConditionExpression: 'host = :host',
     ExpressionAttributeValues: {
-      ':host': { S: PROBE_TARGET_HOST_NAME },
-      ':since': { S: DateTime.utc().minus(lookbackThresholdDuration).toISO() }
+      ':host': { S: PROBE_TARGET_HOST_NAME }
     }
   });
 
