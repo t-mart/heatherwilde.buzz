@@ -14,6 +14,14 @@ export const GET: RequestHandler = async ({ url }) => {
   // Round up to the nearest period so that timestamps aren't fractional.
   const now = timeframe.roundUpToPeriod(DateTime.utc());
 
+  console.log("start time: ", now.minus(timeframe.lookbackDuration).toJSDate());
+  console.log("end time: ", now.toJSDate());
+  console.log("namespace: ", METRIC_NAMESPACE);
+  console.log("metric name: ", 'probe_duration_seconds');
+  console.log("host: ", PROBE_TARGET_HOST_NAME);
+  console.log("period: ", timeframe.period.toMillis() / 1000);
+
+
   const command = new GetMetricDataCommand({
     EndTime: now.toJSDate(),
     StartTime: now.minus(timeframe.lookbackDuration).toJSDate(),
@@ -50,8 +58,6 @@ export const GET: RequestHandler = async ({ url }) => {
     time: timestamp.toISOString(),
     duration: values[i]
   }));
-
-  console.log("probes", probes);
 
   return new Response(JSON.stringify(probes, undefined, 2));
 };
