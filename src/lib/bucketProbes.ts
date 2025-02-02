@@ -44,7 +44,7 @@ export function bucketProbes(probes: Probe[], maxBuckets: number): Probe[] {
     }
 
     if (bucket.length > 0) {
-      let meanDuration = bucket.reduce((acc, probe) => acc + probe.duration, 0) / bucket.length;
+      const meanDuration = bucket.reduce((acc, probe) => acc + probe.duration, 0) / bucket.length;
       buckets.push({
         time: bucket[0].time,
         duration: meanDuration

@@ -51,5 +51,7 @@ export const GET: RequestHandler = async ({ url }) => {
     duration: values[i]
   }));
 
+  console.log("probes", probes);
+
   return new Response(JSON.stringify(probes, undefined, 2));
 };
