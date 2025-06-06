@@ -1,16 +1,100 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+// @ts-check
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import eslintReact from "@eslint-react/eslint-plugin";
+import { FlatCompat } from "@eslint/eslintrc";
+import eslint from "@eslint/js";
+import prettier from "eslint-config-prettier/flat";
+import perfectionist from "eslint-plugin-perfectionist";
+import pluginReactRefresh from "eslint-plugin-react-refresh";
+import unicornPlugin from "eslint-plugin-unicorn";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: import.meta.dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
+export default tseslint.config(
+  {
+    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
 
-export default eslintConfig;
+    plugins: {
+      perfectionist,
+    },
+
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+        projectService: true,
+      },
+    },
+
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+
+    extends: [
+      eslintReact.configs["recommended-typescript"],
+      pluginReactRefresh.configs.vite,
+      eslint.configs.recommended,
+      tseslint.configs.recommended,
+      unicornPlugin.configs.recommended,
+    ],
+
+    rules: {
+      "@eslint-react/no-class-component": "error",
+      "react/react-in-jsx-scope": "off",
+      "react/no-unescaped-entities": "off",
+      "react-refresh/only-export-components": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-useless-undefined": [
+        "error",
+        {
+          checkArrowFunctionBody: false,
+        },
+      ],
+      "unicorn/prefer-query-selector": "off",
+      "unicorn/no-nested-ternary": "off",
+      "unicorn/prevent-abbreviations": [
+        "error",
+        {
+          ignore: [/param/i, /ref/i, /props/i, /args/i, /prev/i, /dev/i],
+        },
+      ],
+      "unicorn/filename-case": [
+        "error",
+        {
+          cases: {
+            kebabCase: true,
+          },
+        },
+      ],
+      "perfectionist/sort-imports": [
+        "error",
+        {
+          internalPattern: [
+            // default
+            "^~/.+",
+            // internal path alias (see package.json `imports`)
+            "^#.+",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    ignores: ["dist/**", ".next/**", "node_modules/**", "eslint.config.js"],
+  },
+  prettier,
+  ...compat.extends("next/core-web-vitals", "next/typescript")
+);
