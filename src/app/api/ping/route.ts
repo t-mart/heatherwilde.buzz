@@ -22,13 +22,14 @@ export async function GET(request: Request) {
   }
 
   const startMilliseconds = performance.now();
-  const response = await fetch(target);
-  const endMilliseconds = performance.now();
-  const durationMilliseconds = response.status === 200 ? Math.trunc(endMilliseconds - startMilliseconds) : undefined;
-
-  if (!durationMilliseconds) {
-    console.error('Ping failed or did not return 200 status, inserting null duration');
+  let response;
+  try {
+    response = await fetch(target);
+  } catch {
+    console.log('Ping failed or did not return 200 status, inserting null duration');
   }
+  const endMilliseconds = performance.now();
+  const durationMilliseconds = response?.status === 200 ? Math.trunc(endMilliseconds - startMilliseconds) : undefined;
 
   const { data, error } = await supabase
     .from('pings')
@@ -51,7 +52,5 @@ export async function GET(request: Request) {
 
   return Response.json({
     ping: data[0],
-  }, {
-    status: response.status,
   });
 }
