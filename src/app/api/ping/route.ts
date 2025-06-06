@@ -2,10 +2,20 @@ import { createClient } from '@supabase/supabase-js'
 
 import { Database } from '#database-schema.ts'
 
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-const supabase = createClient<Database>('https://gsmzdmodeuprbsorflhh.supabase.co', key);
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+const supabase = createClient<Database>('https://gsmzdmodeuprbsorflhh.supabase.co', supabaseKey);
 
-export async function GET() {
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const key = url.searchParams.get('key');
+  if (key !== process.env.PING_API_KEY) {
+    return Response.json({
+      error: 'Invalid API key',
+    }, {
+      status: 401,
+    });
+  }
+
   const target = process.env.PING_TARGET_URL;
   if (!target) {
     return new Response('Ping target URL is not set', { status: 500 });
