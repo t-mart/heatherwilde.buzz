@@ -14,13 +14,13 @@ export async function GET() {
   const startMilliseconds = performance.now();
   const response = await fetch(target);
   const endMilliseconds = performance.now();
-  const duration = response.status === 200 ? Math.trunc(endMilliseconds - startMilliseconds) : undefined;
+  const durationMilliseconds = response.status === 200 ? Math.trunc(endMilliseconds - startMilliseconds) : undefined;
 
   const { data, error } = await supabase
     .from('pings')
     .insert({
       timestamp: new Date().toISOString(),
-      duration: duration,
+      duration_milliseconds: durationMilliseconds,
     })
     .select()
 
