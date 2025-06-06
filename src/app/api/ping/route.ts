@@ -26,11 +26,16 @@ export async function GET(request: Request) {
   const endMilliseconds = performance.now();
   const durationMilliseconds = response.status === 200 ? Math.trunc(endMilliseconds - startMilliseconds) : undefined;
 
+  if (!durationMilliseconds) {
+    console.error('Ping failed or did not return 200 status, inserting null duration');
+  }
+
   const { data, error } = await supabase
     .from('pings')
     .insert({
       timestamp: new Date().toISOString(),
-      duration_milliseconds: durationMilliseconds,
+      // eslint-disable-next-line unicorn/no-null
+      duration_milliseconds: durationMilliseconds ?? null,
     })
     .select()
 
@@ -43,6 +48,7 @@ export async function GET(request: Request) {
       status: 500,
     });
   }
+
   return Response.json({
     ping: data[0],
   }, {
