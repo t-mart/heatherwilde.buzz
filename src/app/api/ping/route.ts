@@ -8,7 +8,7 @@ const supabase = createClient<Database>('https://gsmzdmodeuprbsorflhh.supabase.c
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const key = url.searchParams.get('key');
-  if (key !== process.env.PING_API_KEY) {
+  if (key !== process.env.PING_TRIGGER_API_KEY) {
     return Response.json({
       error: 'Invalid API key',
     }, {
