@@ -13,19 +13,19 @@ export type Database = {
         Row: {
           duration_milliseconds: number | null
           id: number
-          target_url: string | null
+          target_url: string
           timestamp: string
         }
         Insert: {
           duration_milliseconds?: number | null
           id?: number
-          target_url?: string | null
+          target_url: string
           timestamp?: string
         }
         Update: {
           duration_milliseconds?: number | null
           id?: number
-          target_url?: string | null
+          target_url?: string
           timestamp?: string
         }
         Relationships: []
@@ -35,8 +35,35 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_binned_p95_summary: {
+        Args: {
+          start_ts: string
+          end_ts: string
+          num_bins?: number
+          filter_target_url?: string
+        }
+        Returns: {
+          time_bucket: string
+          p95_duration_ms: number
+        }[]
+      }
+      get_binned_p95_summary_since: {
+        Args: {
+          lookback_interval: unknown
+          num_bins?: number
+          filter_target_url?: string
+        }
+        Returns: {
+          time_bucket: string
+          p95_duration_ms: number
+        }[]
+      }
       get_daily_error_summary: {
-        Args: { num_days_to_report: number; report_timezone: string }
+        Args: {
+          num_days_to_report: number
+          report_timezone?: string
+          filter_target_url?: string
+        }
         Returns: {
           report_day: string
           error_rate: number

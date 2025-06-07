@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 
-import { Database } from '#database-schema.ts'
+import { Database } from '#lib/db/schema.ts'
 
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? '';
-const supabase = createClient<Database>('https://gsmzdmodeuprbsorflhh.supabase.co', supabaseKey);
+const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '', supabaseKey);
 
-const targetUrls = process.env.PING_TARGET_URLS?.split(',') || [];
+const targetUrls = process.env.PING_TARGET_URLS?.split(',') ?? [];
 
 export async function GET(request: Request) {
   // ensure authorized client because this endpoint is public.
