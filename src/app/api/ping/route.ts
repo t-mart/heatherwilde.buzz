@@ -7,6 +7,8 @@ const supabase = createClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL ?? 
 
 const targetUrls = process.env.PING_TARGET_URLS?.split(',') ?? [];
 
+const pingTimeoutMilliseconds = 5000;
+
 export async function GET(request: Request) {
   // ensure authorized client because this endpoint is public.
   const url = new URL(request.url);
@@ -46,31 +48,37 @@ export async function GET(request: Request) {
 }
 
 type InsertedPing = Database['public']['Tables']['pings']['Insert'];
+type InsertedPingData = Pick<InsertedPing, 'duration_milliseconds' | 'failure_reason'>;
 
 async function ping(targetUrl: string): Promise<InsertedPing> {
   const controller = new AbortController();
   const signal = controller.signal;
-  const timeoutId = setTimeout(() => controller.abort(), 5000);
-
+  
   const timestamp = new Date().toISOString();
-  const startMilliseconds = performance.now();
-  let response;
+  let pingData: InsertedPingData;
+  
+  const timeoutId = setTimeout(() => controller.abort(), pingTimeoutMilliseconds);
 
   try {
-    response = await fetch(targetUrl, { signal });
+    const startMilliseconds = performance.now();
+    await fetch(targetUrl, { signal });
+    const endMilliseconds = performance.now();
+    pingData = {
+      duration_milliseconds: Math.trunc(endMilliseconds - startMilliseconds),
+    };
+  } catch (error) {
+    pingData = {
+      duration_milliseconds: undefined,
+      failure_reason: error instanceof Error ? error.message : String(error),
+    };
   } finally {
     clearTimeout(timeoutId);
   }
 
-  const endMilliseconds = performance.now();
-
-  // eslint-disable-next-line unicorn/no-null
-  const durationMilliseconds = response?.status === 200 ? Math.trunc(endMilliseconds - startMilliseconds) : null;
-
   return {
     timestamp,
     target_url: targetUrl,
-    duration_milliseconds: durationMilliseconds,
+    ...pingData,
   };
 }
 

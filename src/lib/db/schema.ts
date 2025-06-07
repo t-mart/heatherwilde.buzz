@@ -12,18 +12,21 @@ export type Database = {
       pings: {
         Row: {
           duration_milliseconds: number | null
+          failure_reason: string | null
           id: number
           target_url: string
           timestamp: string
         }
         Insert: {
           duration_milliseconds?: number | null
+          failure_reason?: string | null
           id?: number
           target_url: string
           timestamp?: string
         }
         Update: {
           duration_milliseconds?: number | null
+          failure_reason?: string | null
           id?: number
           target_url?: string
           timestamp?: string
