@@ -58,8 +58,6 @@ async function ping(targetUrl: string): Promise<InsertedPing> {
 
   try {
     response = await fetch(targetUrl, { signal });
-  } catch (error) {
-    console.log('Ping failed or did not return 200 status, inserting null duration', error);
   } finally {
     clearTimeout(timeoutId);
   }
