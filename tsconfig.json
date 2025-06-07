@@ -19,7 +19,11 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false,
-    "noUncheckedSideEffectImports": true,
+
+    // This option is generally a good thing, but it barfs on `import
+    // "./globals.css";` for Tailwind
+    //
+    // "noUncheckedSideEffectImports": true,
 
     "plugins": [
       {
