@@ -50,9 +50,19 @@ export default tseslint.config(
       tseslint.configs.recommended,
       unicornPlugin.configs.recommended,
     ],
+  },
+  {
+    ignores: ["dist/**", ".next/**", "node_modules/**"],
+  },
+  prettier,
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
 
+  // rules last to ensure application
+  {
     rules: {
       "@eslint-react/no-class-component": "error",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
       "react/react-in-jsx-scope": "off",
       "react/no-unescaped-entities": "off",
       "react-refresh/only-export-components": "off",
@@ -92,9 +102,4 @@ export default tseslint.config(
       ],
     },
   },
-  {
-    ignores: ["dist/**", ".next/**", "node_modules/**", "eslint.config.js"],
-  },
-  prettier,
-  ...compat.extends("next/core-web-vitals", "next/typescript")
 );
