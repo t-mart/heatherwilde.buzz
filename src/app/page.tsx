@@ -4,6 +4,7 @@ import { getDailyErrorSummary } from "#lib/db/rpc.ts";
 import { Database } from "#lib/db/schema.ts";
 
 import DailyErrorSummary from "./daily-error-summary";
+import DailyErrorSummarySVG from "./daily-error-summary-svg";
 
 const maxSummaryDayCount = 90;
 
@@ -33,6 +34,7 @@ export default async function Home() {
         </p>
 
         <DailyErrorSummary initialDayErrorData={dayErrorData} />
+        <DailyErrorSummarySVG initialDayErrorData={dayErrorData} />
       </div>
     </div>
   );
