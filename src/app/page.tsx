@@ -1,41 +1,77 @@
 import { createClient } from "@supabase/supabase-js";
 
-import { getDailyErrorSummary } from "#lib/db/rpc.ts";
+import {
+  getLatestAnonymousPing,
+  getPingTimeBins,
+  PostgresInterval,
+} from "#lib/db/query.ts";
 import { Database } from "#lib/db/schema.ts";
 
-import DailyErrorSummary from "./daily-error-summary";
-import DailyErrorSummarySVG from "./daily-error-summary-svg";
+import PingTimeBinDisplay from "./ping-time-bin-display";
 
-const maxSummaryDayCount = 90;
+const binCount = 60;
+const lookbackInterval: PostgresInterval = "2 days";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
+const visualizedTargetUrls =
+  process.env.VISUALIZED_TARGET_URLS?.split(",") ?? [];
+
 export default async function Home() {
-  const { data: dayErrorData, error: dayErrorError } =
-    await getDailyErrorSummary(supabase, {
-      numDaysToReport: maxSummaryDayCount,
-    });
-
-  if (dayErrorError) {
-    console.error("Failed to fetch daily error summary:", dayErrorError);
-  }
-
+  const targetBinData = await Promise.all(
+    visualizedTargetUrls.map(async (targetUrl, index) =>
+      fetchTargetData(targetUrl, `${index}`),
+    ),
+  );
   return (
     <div className="px-8 py-4">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-5xl space-y-4">
         <h1 className="text-3xl">Heatherwilde.net</h1>
 
         <p className="text-lg">
-          Status of the Optimum Internet service as seens from customer data in the Heatherwilde community of
-          Pflugerville, TX.
+          Status of the Optimum Internet service as seens from customer data in
+          the Heatherwilde community of Pflugerville, TX.
         </p>
 
-        <DailyErrorSummary initialDayErrorData={dayErrorData} />
-        <DailyErrorSummarySVG initialDayErrorData={dayErrorData} />
+        {targetBinData.map(({ id, bins, latestAnonymousPing }) => (
+          <PingTimeBinDisplay
+            key={id}
+            id={id}
+            dbBins={bins}
+            dbLatestAnonymousPing={latestAnonymousPing}
+          />
+        ))}
       </div>
     </div>
   );
+}
+
+async function fetchTargetData(targetUrl: string, id: string) {
+  // This function is used to fetch the data for a specific target URL.
+  // It retrieves the latest ping and the ping time bins for the given target URL.
+  // The latest ping is fetched first to ensure it is included in the bins data.
+
+  const { data: latestAnonymousPing, error: latestPingError } =
+    await getLatestAnonymousPing(supabase, {
+      targetUrl,
+    });
+
+  if (latestPingError) {
+    console.error("Failed to fetch latest ping:", latestPingError);
+  }
+
+  const { data: bins, error: binsError } = await getPingTimeBins(supabase, {
+    lookbackInterval,
+    binCount,
+    filterTargetUrl: targetUrl,
+  });
+
+  if (binsError) {
+    console.error("Failed to fetch ping time bins:", binsError);
+  }
+
+  return { bins, latestAnonymousPing, id };
 }

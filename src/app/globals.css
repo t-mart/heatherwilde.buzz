@@ -3,6 +3,8 @@
 @theme inline {
   --color-background: light-dark(var(--color-white), var(--color-zinc-950));
   --color-foreground: light-dark(var(--color-zinc-950), var(--color-zinc-50));
+  --color-border: light-dark(var(--color-zinc-200), var(--color-zinc-800));
+  --color-grid-background: var(--color-border);
 }
 
 @theme static {
@@ -14,4 +16,15 @@
 :root {
   color-scheme: light dark;
   @apply bg-background text-foreground antialiased transition-colors;
+}
+
+.time-bin-display {
+  display: grid;
+  grid-template-areas:
+    "top-left top-right"
+    "viz viz"
+    "bottom-left bottom-right";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 1rem;
 }

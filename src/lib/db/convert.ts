@@ -1,41 +1,46 @@
 import { Temporal } from "temporal-polyfill";
 
-import { Database } from "./schema";
+import { DBAnonymousLatestPing, DBPingTimeBin } from "./query";
 
-function splitPostgresDate(date: string) {
-  const [year, month, day] = date.split('-').map(Number);
-  if (!year || !month || !day) {
-    throw new Error(`Invalid date format: ${date}`);
-  }
-  return { year, month, day };
-}
+const localTimeZone = "America/Chicago";
+const nanosecondsPerSecond = BigInt(1_000_000_000);
 
-export type DayErrorData = {
-  reportDay: Temporal.PlainDate;
-  errorRate: number;
-  totalPings: number;
-  isFiller: boolean;
+export type PingTimeBin = {
+  start: Temporal.ZonedDateTime;
+  end: Temporal.ZonedDateTime;
+  totalPingCount: number;
+  failedPingCount: number;
 };
 
-export function toDayErrorData({ report_day, error_rate, ping_count }: Database['public']['Functions']['get_daily_error_summary']['Returns'][number]): DayErrorData {
-  const { year, month, day } = splitPostgresDate(report_day);
-
+export function toPingTimeBin(data: DBPingTimeBin): PingTimeBin {
   return {
-    reportDay: new Temporal.PlainDate(year, month, day),
-    errorRate: error_rate,
-    totalPings: ping_count,
-    isFiller: false,
+    start: new Temporal.ZonedDateTime(
+      BigInt(data.start_epoch) * nanosecondsPerSecond,
+      localTimeZone,
+    ),
+    end: new Temporal.ZonedDateTime(
+      BigInt(data.end_epoch) * nanosecondsPerSecond,
+      localTimeZone,
+    ),
+    totalPingCount: data.total_ping_count,
+    failedPingCount: data.failed_ping_count,
   };
 }
 
-export type BinnedP95Data = {
-  timeBucket: Temporal.ZonedDateTime;
-  p95DurationMilliseconds: number;
+export type AnonymousLatestPing = {
+  timestamp_epoch: Temporal.ZonedDateTime;
+  durationMilliseconds?: number;
 };
 
-export function toBinnedP95Data(data: Database['public']['Functions']['get_binned_p95_summary_since']['Returns'][number]): BinnedP95Data {
+export function toAnonymousLatestPing(
+  dbAnonymousLatestPing: DBAnonymousLatestPing,
+): AnonymousLatestPing {
   return {
-    timeBucket: Temporal.ZonedDateTime.from(data.time_bucket),
-    p95DurationMilliseconds: data.p95_duration_ms,
+    timestamp_epoch: new Temporal.ZonedDateTime(
+      BigInt(dbAnonymousLatestPing.timestamp_epoch!) * nanosecondsPerSecond,
+      localTimeZone,
+    ),
+    durationMilliseconds:
+      dbAnonymousLatestPing.duration_milliseconds ?? undefined,
   };
 }

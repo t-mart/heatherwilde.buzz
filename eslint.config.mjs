@@ -78,7 +78,7 @@ export default tseslint.config(
       "unicorn/prevent-abbreviations": [
         "error",
         {
-          ignore: [/param/i, /ref/i, /props/i, /args/i, /prev/i, /dev/i],
+          ignore: [/param/i, /ref/i, /props/i, /args/i, /prev/i, /dev/i, /db/i],
         },
       ],
       "unicorn/filename-case": [

@@ -4,93 +4,99 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   public: {
     Tables: {
       pings: {
         Row: {
-          duration_milliseconds: number | null
-          failure_reason: string | null
-          id: number
-          target_url: string
-          timestamp: string
-        }
+          duration_milliseconds: number | null;
+          failure_reason: string | null;
+          id: number;
+          target_url: string;
+          timestamp: string;
+        };
         Insert: {
-          duration_milliseconds?: number | null
-          failure_reason?: string | null
-          id?: number
-          target_url: string
-          timestamp?: string
-        }
+          duration_milliseconds?: number | null;
+          failure_reason?: string | null;
+          id?: number;
+          target_url: string;
+          timestamp?: string;
+        };
         Update: {
-          duration_milliseconds?: number | null
-          failure_reason?: string | null
-          id?: number
-          target_url?: string
-          timestamp?: string
-        }
-        Relationships: []
-      }
-    }
+          duration_milliseconds?: number | null;
+          failure_reason?: string | null;
+          id?: number;
+          target_url?: string;
+          timestamp?: string;
+        };
+        Relationships: [];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      latest_pings_by_target_url: {
+        Row: {
+          duration_milliseconds: number | null;
+          failure_reason: string | null;
+          id: number | null;
+          target_url: string | null;
+          timestamp: string | null;
+          timestamp_epoch: number | null;
+        };
+        Relationships: [];
+      };
+    };
     Functions: {
-      get_binned_p95_summary: {
+      get_ping_time_bins: {
         Args: {
-          start_ts: string
-          end_ts: string
-          num_bins?: number
-          filter_target_url?: string
-        }
+          start_timestamp: string;
+          end_timestamp: string;
+          bin_count: number;
+          filter_target_url?: string;
+        };
         Returns: {
-          time_bucket: string
-          p95_duration_ms: number
-        }[]
-      }
-      get_binned_p95_summary_since: {
+          start: string;
+          end: string;
+          start_epoch: number;
+          end_epoch: number;
+          total_ping_count: number;
+          failed_ping_count: number;
+        }[];
+      };
+      get_ping_time_bins_for_interval: {
         Args: {
-          lookback_interval: unknown
-          num_bins?: number
-          filter_target_url?: string
-        }
+          lookback_interval: unknown;
+          bin_count: number;
+          filter_target_url?: string;
+        };
         Returns: {
-          time_bucket: string
-          p95_duration_ms: number
-        }[]
-      }
-      get_daily_error_summary: {
-        Args: {
-          num_days_to_report: number
-          report_timezone?: string
-          filter_target_url?: string
-        }
-        Returns: {
-          report_day: string
-          error_rate: number
-          ping_count: number
-        }[]
-      }
-    }
+          start: string;
+          end: string;
+          start_epoch: number;
+          end_epoch: number;
+          total_ping_count: number;
+          failed_ping_count: number;
+        }[];
+      };
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DefaultSchema = Database[Extract<keyof Database, "public">];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
@@ -98,7 +104,7 @@ export type Tables<
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
   ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -106,64 +112,64 @@ export type Tables<
         DefaultSchema["Views"])
     ? (DefaultSchema["Tables"] &
         DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
   ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof Database },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
   ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof Database },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
@@ -171,14 +177,14 @@ export type Enums<
   ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+    : never;
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof Database;
   }
     ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
@@ -186,10 +192,10 @@ export type CompositeTypes<
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+    : never;
 
 export const Constants = {
   public: {
     Enums: {},
   },
-} as const
+} as const;
