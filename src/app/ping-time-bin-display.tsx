@@ -1,19 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Temporal } from "temporal-polyfill";
-
 import {
   PingTimeBin,
   toAnonymousLatestPing,
   toPingTimeBin,
 } from "#lib/db/convert.ts";
 import { DBAnonymousLatestPing, DBPingTimeBin } from "#lib/db/query.ts";
-
-const dayWidth = 10;
-const gapWidth = dayWidth * 0.618;
-const dayGapWidth = dayWidth + gapWidth;
-const maxDaysToShow = 90;
 
 export default function PingTimeBinDisplay({
   dbBins,
@@ -75,7 +67,7 @@ export default function PingTimeBinDisplay({
                 <time>{bin.end.toString()}</time>
               </dd>
               <dt>Total Pings</dt>
-              <dd>{bin.totalPingCount * 100}%</dd>
+              <dd>{bin.totalPingCount}</dd>
               <dt>Failed Pings</dt>
               <dd>{bin.failedPingCount}</dd>
               <dt>Error Rate</dt>

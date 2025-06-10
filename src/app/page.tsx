@@ -9,7 +9,10 @@ import { Database } from "#lib/db/schema.ts";
 
 import PingTimeBinDisplay from "./ping-time-bin-display";
 
-const binCount = 60;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const dynamic = 'force-dynamic'
+
+const binCount = 5;
 const lookbackInterval: PostgresInterval = "2 days";
 
 const supabase = createClient<Database>(
