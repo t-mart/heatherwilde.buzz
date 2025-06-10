@@ -12,8 +12,8 @@ import PingTimeBinDisplay from "./ping-time-bin-display";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dynamic = 'force-dynamic'
 
-const binCount = 5;
-const lookbackInterval: PostgresInterval = "2 days";
+const binCount = 60;
+const lookbackInterval: PostgresInterval = "7 days";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
